@@ -1,7 +1,10 @@
+import logging
 import pandas as pd
 
 from typing import Union
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 class LoadData:
