@@ -152,10 +152,6 @@ octave-workspace
 # Simulink autosave extension
 .autosave
 
-##-------------------------------------------------
-## Ignore actual Matlab data
-##-------------------------------------------------
+# TDW Added
 
-*.mat
-
-data/
+.idea
