@@ -28,5 +28,3 @@ if __name__ == "__main__":
     pupil_dict = pupil_data.load_pupil_data()
 
     f = 10
-
-    # load_data(qualisys_path_string)
