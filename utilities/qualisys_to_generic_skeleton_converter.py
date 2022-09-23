@@ -2,8 +2,8 @@ from typing import Dict
 
 import numpy as np
 
-def get_qualisys_marker_names_from_dict(qualisys_dict:Dict) -> list:
 
+def get_qualisys_marker_names_from_dict(qualisys_dict: Dict) -> list:
     raw_names_list = list(qualisys_dict.keys())
 
     marker_names_without_subject_initials = [raw_name.split('_')[-1] for raw_name in raw_names_list]
@@ -14,8 +14,8 @@ def get_qualisys_marker_names_from_dict(qualisys_dict:Dict) -> list:
 
     return qualisys_marker_names
 
-def qualisys_to_generic_skeleton_converter(qualisys_dict:Dict) -> np.ndarray:
 
+def qualisys_to_generic_skeleton_converter(qualisys_dict: Dict) -> np.ndarray:
     qualisys_marker_names_list = get_qualisys_marker_names_from_dict(qualisys_dict)
 
     # google "python match part of a string"

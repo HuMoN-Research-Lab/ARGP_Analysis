@@ -1,5 +1,7 @@
+import json
 import logging
 from pathlib import Path
+from os.path import exists
 
 import pandas as pd
 
@@ -27,9 +29,19 @@ if __name__ == "__main__":
     qualisys_df = pd.read_csv(filepath_or_buffer=str(qualisys_data_path), delimiter='\t', header=11)
     pupil_df = pd.read_csv(filepath_or_buffer=str(pupil_data_path), delimiter=',', header=0)
 
-    qualisys_dict = qualisys_df.to_dict()
-    # this takes a long time already, so in the future when we're doing this in the future we'll save it
+    if exists('utilities/qualisys_dict.json'):  # check and see if I've run this code before/ created the dictionary
+
+        qualisys_json_to_load = open('utilities/qualisys_dict.json')
+        qualisys_dict = json.load(qualisys_json_to_load)
+
+    else:  # if the file doesn't exist, create it!
+
+        qualisys_dict = qualisys_df.to_dict()
+
+        with open('utilities/qualisys_dict.json', 'w') as output_file:  # stuff it into the utilities folder
+
+            qualisys_json = json.dumps(qualisys_dict)
+            output_file.write(qualisys_json)
 
     skeleton_frame_marker_dimension_npy = qualisys_to_generic_skeleton_converter(qualisys_dict)
 
-    f = 10
