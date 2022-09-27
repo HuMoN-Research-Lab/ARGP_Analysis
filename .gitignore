@@ -155,3 +155,5 @@ octave-workspace
 # TDW Added
 
 .idea
+*.json
+
