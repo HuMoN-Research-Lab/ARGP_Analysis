@@ -27,8 +27,12 @@ if __name__ == "__main__":
     qualisys_df = pd.read_csv(filepath_or_buffer=str(qualisys_data_path), delimiter='\t', header=11)
     pupil_df = pd.read_csv(filepath_or_buffer=str(pupil_data_path), delimiter=',', header=0)
 
-    subject_json_path = qualisys_data_path = base_data_path / subject_id / 'processing_jsons'
+    subject_json_path = qualisys_data_path / base_data_path / subject_id / 'processing_jsons'
 
-    process_data(subject_json_path, qualisys_df, pupil_df)
+    # a json file containing a qualisys dictionary is created in `utilities.qualisys_json_creator.py`,
+    #   called by `process_data.py`. The path for this file shouldn't change, so I'm specifying it here
+    subject_qualisys_json_path = subject_json_path / 'qualisys_dict.json'
+
+    process_data(subject_qualisys_json_path, qualisys_df, pupil_df)
 
     f = 10
