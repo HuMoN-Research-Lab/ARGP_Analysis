@@ -3,9 +3,15 @@ import string
 
 def average_joint_trajectory(qualisys_dict: dict,
                              markers_to_combine: list):
-    marker_string_names = markers_to_combine[0].split('+')
 
-    # for listed_marker in marker_string_names:
+    marker_string_names = markers_to_combine[0].split('+')
+    marker_weights = markers_to_combine[1].split(',')
+
+    for listed_marker in marker_string_names:
+
+        for key, value in qualisys_dict.items():
+            if listed_marker in key:
+                print(key)
 
     pass
 
