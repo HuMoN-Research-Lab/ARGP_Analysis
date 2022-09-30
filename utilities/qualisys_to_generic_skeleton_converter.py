@@ -20,7 +20,7 @@ def qualisys_to_generic_skeleton_converter(qualisys_dict: Dict) -> np.ndarray:
 
         markers_to_combine = qualisys_joint_center_guide[key]
 
-        joint_trajectory = average_joint_trajectory(qualisys_dict, markers_to_combine)
+        joint_trajectory_ndarray = average_joint_trajectory(qualisys_dict, markers_to_combine)
 
         generic_skelly_dict["XYZ_Trajectory"].append(key)
 
