@@ -3,6 +3,7 @@ import numpy as np
 from utilities.get_marker_key_list_for_joint import get_marker_key_list_for_joint
 
 
+# noinspection GrazieInspection
 def get_joint_from_markers(qualisys_dict: dict,
                            markers_to_combine: list) -> np.array:
 
@@ -17,7 +18,7 @@ def get_joint_from_markers(qualisys_dict: dict,
 
         marker_array = np.array([])
 
-        # use the keys to assemble an np.array to put inside of a dictionary
+        # use the keys to assemble an np.array to put inside a dictionary
         for key in marker_key_list:
 
             temp_dict_values = qualisys_dict.get(key).values()

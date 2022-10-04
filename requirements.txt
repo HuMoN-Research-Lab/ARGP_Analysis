@@ -27,3 +27,6 @@ wcwidth==0.2.5
 wheel==0.37.1
 wincertstore==0.2
 git+git://github.com/HuMoN-Research-Lab/shared_utilities
+
+scipy~=1.9.1
+rich~=12.5.1
