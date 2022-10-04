@@ -13,4 +13,6 @@ def process_data(subject_qualisys_json_path: Path,
 
     qualisys_dict = qualisys_json_creator(subject_qualisys_json_path, qualisys_df)
 
-    skeleton_frame_marker_dimension_npy = qualisys_to_generic_skeleton_converter(qualisys_dict)
+    generic_skelly_dict = qualisys_to_generic_skeleton_converter(qualisys_dict)
+
+    f = 10
