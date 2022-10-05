@@ -1,9 +1,11 @@
 import logging
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from proccess_data import process_data
+from utilities.data_vis_debug import data_vis_debug
 
 logger = logging.getLogger(__name__)
 # logger.setLevel(INFO)
@@ -33,8 +35,11 @@ if __name__ == "__main__":
     #   called by `process_data.py`. The path for this file shouldn't change, so I'm specifying it here
     subject_qualisys_json_path = subject_json_path / 'qualisys_dict.json'
 
-    process_data(subject_qualisys_json_path, qualisys_df, pupil_df)
+    generic_skelly_dict = process_data(subject_qualisys_json_path, qualisys_df, pupil_df)
 
-    f = 10
+    data_vis_debug(generic_skelly_dict, select_frame=np.array([1500]))
+
+    f = 'debug stop'
+
 
 
