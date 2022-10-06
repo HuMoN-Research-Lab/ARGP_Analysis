@@ -4,20 +4,9 @@ from pathlib import Path
 from typing import Union
 import numpy as np
 from rich import inspect
-from jon_scratch.pupil_calibration_pipeline.data_classes.freemocap_session_data_class import (
-    FreemocapSessionDataClass,
-)
-from jon_scratch.pupil_calibration_pipeline.rotation_matrix_calculator import (
-    RotationMatrixCalculator,
-)
-from jon_scratch.pupil_calibration_pipeline.pupil_freemocap_synchronizer import (
-    PupilFreemocapSynchronizer,
-)
-from jon_scratch.pupil_calibration_pipeline.qt_gl_laser_skeleton_visualizer import (
-    QtGlLaserSkeletonVisualizer,
-)
-from jon_scratch.pupil_calibration_pipeline.session_data_loader import SessionDataLoader
-from jon_scratch.pupil_calibration_pipeline.vor_calibrator import VorCalibrator
+
+from pupil_labs_stuff.pupil_freemocap_synchronizer import PupilFreemocapSynchronizer
+from pupil_labs_stuff.vor_calibrator import VorCalibrator
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -73,7 +62,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         )
 
         ####
-        # load pupil data
+        # load pupil data  # TODO this is where trent comes in - either format my data to fr_mar_dim or adapt to dicts
         ####
         pupil_data_handler = self.session_data_loader.load_pupil_data()
         self.raw_session_data.right_eye_pupil_labs_data = (

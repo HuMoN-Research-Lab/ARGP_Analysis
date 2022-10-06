@@ -1,3 +1,4 @@
+import matplotlib
 from matplotlib import pyplot as plt
 from numpy import ndarray
 import seaborn as sns
@@ -8,6 +9,8 @@ def skelly_plotter(generic_skelly_dict: dict,
 
     sns.set(style="darkgrid")
 
+    matplotlib.use("qt5agg")
+    plt.ion()  # stands for "interactive mode on"
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     # ax.axis('equal')
@@ -29,4 +32,8 @@ def skelly_plotter(generic_skelly_dict: dict,
     ax.set_zlim([0, 1800])
     ax.view_init(0, 90)
 
+    # TODO find some center point and then do +/- the same amount from all of them; this will equalize the 3d axes...
+
     plt.show()
+
+    f = 10

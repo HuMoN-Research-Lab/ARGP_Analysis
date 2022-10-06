@@ -1,6 +1,6 @@
 
 qualisys_joint_center_dict = {
-
+        # TODO add forehead marker/"joint"
         "head_xyz": {
                 "HeadL": 0.5,
                 "HeadR": 0.5
