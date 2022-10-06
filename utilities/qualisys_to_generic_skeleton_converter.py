@@ -1,29 +1,19 @@
 from typing import Dict
 
-import numpy as np
+from utilities.get_joint_from_markers import get_joint_from_markers
+from utilities.dumb_qualisys_joint_center_dictionary_builder import qualisys_joint_center_dict  #### Rename this file to something that makes sense
 
 
-def get_qualisys_marker_names_from_dict(qualisys_dict: Dict) -> list:
-    raw_names_list = list(qualisys_dict.keys())
+def qualisys_to_generic_skeleton_converter(qualisys_dict: Dict) -> dict:
 
-    marker_names_without_subject_initials = [raw_name.split('_')[-1] for raw_name in raw_names_list]
+    generic_skelly_dict = {}
 
-    marker_names_without_xyz = [raw_name.split(' ')[0] for raw_name in marker_names_without_subject_initials]
+    for key in qualisys_joint_center_dict.keys():
 
-    qualisys_marker_names = list(set(marker_names_without_xyz))
+        markers_to_combine = qualisys_joint_center_dict[key]  # this is currently feeding in lists, need to change it to dictionaries
 
-    return qualisys_marker_names
+        joint_trajectory_ndarray = get_joint_from_markers(qualisys_dict, markers_to_combine)
 
+        generic_skelly_dict.update({key: joint_trajectory_ndarray})
 
-def qualisys_to_generic_skeleton_converter(qualisys_dict: Dict) -> np.ndarray:
-    qualisys_marker_names_list = get_qualisys_marker_names_from_dict(qualisys_dict)
-
-    # google "python match part of a string"
-
-    # get the pieces of data from the dictionary that will help me calculate the joint centers
-
-    # build a dictionary, maybe written out by hand, where every key in the dict is the name of a marker I'm trying to create
-    # for each key, we'll have a list of the names of the markers that make it up
-    # and another list of the weights that those markers have (if it's the average of two points, take the mean)
-
-    pass
+    return generic_skelly_dict
