@@ -10,6 +10,9 @@ Repo for the post-processing and analysis of Pupil, Qualisys, and Unity data tha
 ## Demo Data
 - follow [this URL](https://drive.google.com/drive/folders/1dic0dFkEQCN648a0imlMrh2oLi4s2bnb?usp=sharing) to download a zip file containing all the demo files that you'll need
 - this contains three files:
+```
+# JSM NOTE - Your code assumes a certain directory structure, so  your demo data should be in that file structure. Just upload the whole session folder to Drive or something and link to that here. Also, add instructions on like "Put the dat somewhere and change th path at line Whatever"
+```
   1. `2022-08-29_Pilot_Data0002.tsv` <- qualisys data as a `.tsv` file
   2. `pupil_positions.csv` <- pupil labs data, currently not used
   3. `qualisys_dict.json` <- the code will create this, but you can point your paths at this file on line 32 of `main.py` and save yourself time

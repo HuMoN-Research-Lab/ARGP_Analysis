@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from proccess_data import process_data
+from utilities.process_data import process_data
 from utilities.data_vis_debug import data_vis_debug
 
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     data_vis_debug(generic_skelly_dict, select_frame=np.array([1500]))
 
-    f = 'debug stop'
+    f = 'debug_stop'
 
 
 
