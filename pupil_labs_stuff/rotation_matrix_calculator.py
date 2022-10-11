@@ -7,9 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import keyboard
 
-from jon_scratch.pupil_calibration_pipeline.data_classes.rotation_data_class import (
-    RotationDataClass,
-)
+from pupil_labs_stuff.data_classes.rotation_data_class import RotationDataClass
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

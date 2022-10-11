@@ -5,7 +5,11 @@ from typing import Union
 import numpy as np
 from rich import inspect
 
+from pupil_labs_stuff.data_classes.freemocap_session_data_class import FreemocapSessionDataClass
 from pupil_labs_stuff.pupil_freemocap_synchronizer import PupilFreemocapSynchronizer
+from pupil_labs_stuff.qt_gl_laser_skeleton_visualizer import QtGlLaserSkeletonVisualizer
+from pupil_labs_stuff.rotation_matrix_calculator import RotationMatrixCalculator
+from pupil_labs_stuff.session_data_loader import SessionDataLoader
 from pupil_labs_stuff.vor_calibrator import VorCalibrator
 
 logger = logging.getLogger(__name__)
@@ -189,7 +193,7 @@ if __name__ == "__main__":
     vor_frame_start_in = 1200
     vor_frame_end_in = 1500
 
-    data_path = Path("C:/Users/jonma/Dropbox/FreeMoCapProject/FreeMocap_Data/")
+    data_path = Path(r"D:\data_storage\pupil_data_from_jon")
     this_session_path = data_path / session_id
 
     pupil_freemocap_calibration_pipeline_orchestrator = (

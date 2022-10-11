@@ -5,10 +5,7 @@ from typing import Union
 import numpy as np
 import pandas as pd
 
-from jon_scratch.pupil_calibration_pipeline.data_classes.pupil_dataclass_and_handler import (
-    PupilLabsDataClass,
-    PupilDataHandler,
-)
+from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilDataHandler
 
 logger = logging.getLogger(__name__)
 

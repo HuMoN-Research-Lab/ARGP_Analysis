@@ -3,12 +3,8 @@ from typing import List
 
 import numpy as np
 
-from jon_scratch.pupil_calibration_pipeline.data_classes.pupil_dataclass_and_handler import (
-    PupilLabsDataClass,
-)
-from jon_scratch.pupil_calibration_pipeline.data_classes.rotation_data_class import (
-    RotationDataClass,
-)
+from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilLabsDataClass
+from pupil_labs_stuff.data_classes.rotation_data_class import RotationDataClass
 
 
 @dataclass
