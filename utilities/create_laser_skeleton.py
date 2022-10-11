@@ -10,7 +10,9 @@ def create_laser_skeleton(generic_skelly_dict: dict,
                           pupil_df: pd.DataFrame,
                           pupil_json_path: Path,
                           vor_start: int,
-                          vor_end: int):
+                          vor_end: int) -> dict:
+
+    # We want a sychronized & aligned laser skeleton at the end of this
 
     pupil_freemocap_calibration_pipeline_orchestrator = (
         PupilFreemocapCalibrationPipelineOrchestrator(

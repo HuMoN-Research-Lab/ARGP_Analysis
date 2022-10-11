@@ -194,6 +194,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         pupil_data_handler.convert_to_unix_timestamps(self._pupil_json_dict)
 
         # TODO this is where Trent needs to input his mocap data to align with pupil data
+        # this will start to look like pieces of the matlab code
 
         self.raw_session_data.right_eye_pupil_labs_data = (
             pupil_data_handler.get_eye_data("right")
@@ -205,7 +206,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         ####
         # Synchronize pupil data with freemocap data - results in synchronized_session_data (each stream has exactly the same number of frames)
         ####
-        synchronized_session_data = PupilFreemocapSynchronizer(
+        synchronized_session_data = PupilFreemocapSynchronizer(  # TODO create PupilQualisysSynchronizer
             self.raw_session_data
         ).synchronize(
             vor_frame_start=self.vor_frame_start,
