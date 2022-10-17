@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import numpy as np
 import pandas
 
 from utilities.qualisys_json_creator import qualisys_json_creator

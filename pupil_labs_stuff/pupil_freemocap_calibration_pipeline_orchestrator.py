@@ -6,6 +6,7 @@ from typing import Union
 import numpy as np
 import pandas as pd
 
+from pupil_labs_stuff.convert_pupil_labs_data_class_to_dict import convert_pupil_labs_data_class_to_dict
 from pupil_labs_stuff.data_classes.freemocap_session_data_class import FreemocapSessionDataClass
 from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilDataHandler
 from pupil_labs_stuff.pupil_freemocap_synchronizer import PupilFreemocapSynchronizer
@@ -202,6 +203,10 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         self.raw_session_data.left_eye_pupil_labs_data = (
             pupil_data_handler.get_eye_data("left")
         )
+
+        pupil_labs_dict = convert_pupil_labs_data_class_to_dict(
+            left_eye_pupil_labs_data=self.raw_session_data.left_eye_pupil_labs_data,
+            right_eye_pupil_labs_data=self.raw_session_data.right_eye_pupil_labs_data)
 
         ####
         # Synchronize pupil data with freemocap data - results in synchronized_session_data (each stream has exactly the same number of frames)
