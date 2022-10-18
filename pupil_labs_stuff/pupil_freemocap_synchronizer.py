@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib
 
-from pupil_labs_stuff.data_classes.freemocap_session_data_class import FreemocapSessionDataClass
+from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkeletonDataClass
 from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilLabsDataClass
 
 matplotlib.use("qt5agg")
@@ -16,9 +16,9 @@ class PupilFreemocapSynchronizer:
     synchronize pupil and freemocap timestamps, return synchronized session data (exactly the same number of synchronized frames in each data stream
     """
 
-    def __init__(self, raw_session_data: FreemocapSessionDataClass):
+    def __init__(self, raw_session_data: LaserSkeletonDataClass):
         self.raw_session_data = raw_session_data
-        self.synchronized_session_data: FreemocapSessionDataClass = None
+        self.synchronized_session_data: LaserSkeletonDataClass = None
 
     def synchronize(
         self,
@@ -30,35 +30,35 @@ class PupilFreemocapSynchronizer:
         align freemocap and pupil timestamps and clip the starts and ends of the various data traces so that everything covers the same timespacn
         """
         # find start and end frames shared by all datastreams
-        freemocap_timestamps = self.raw_session_data.timestamps
+        mocap_timestamps = self.raw_session_data.mocap_timestamps
         right_eye_timestamps = (
             self.raw_session_data.right_eye_pupil_labs_data.timestamps
         )
         left_eye_timestamps = self.raw_session_data.left_eye_pupil_labs_data.timestamps
 
         start_time_unix = np.max(
-            (freemocap_timestamps[0], right_eye_timestamps[0], left_eye_timestamps[0])
+            (mocap_timestamps[0], right_eye_timestamps[0], left_eye_timestamps[0])
         )
         end_time_unix = np.min(
             (
-                freemocap_timestamps[-1],
+                mocap_timestamps[-1],
                 right_eye_timestamps[-1],
                 left_eye_timestamps[-1],
             )
         )
 
         # freemocap
-        if any(freemocap_timestamps >= start_time_unix):
-            freemocap_start_frame = np.where(freemocap_timestamps >= start_time_unix)[
+        if any(mocap_timestamps >= start_time_unix):
+            freemocap_start_frame = np.where(mocap_timestamps >= start_time_unix)[
                 0
             ][0]
         else:
             freemocap_start_frame = 0
 
-        if any(freemocap_timestamps <= end_time_unix):
-            freemocap_end_frame = np.where(freemocap_timestamps <= end_time_unix)[0][-1]
+        if any(mocap_timestamps <= end_time_unix):
+            freemocap_end_frame = np.where(mocap_timestamps <= end_time_unix)[0][-1]
         else:
-            freemocap_end_frame = len(freemocap_timestamps)
+            freemocap_end_frame = len(mocap_timestamps)
 
         # right eye
         if any(right_eye_timestamps >= start_time_unix):
@@ -92,7 +92,7 @@ class PupilFreemocapSynchronizer:
         self.left_eye_end_frame = left_eye_end_frame
 
         # rebase time onto freemocap's framerate (b/c it's slower than pupil) <- sloppy, assumes mocap slower than eye tracker, which is untrue for, say, GoPros
-        self.synchronized_timestamps = self.raw_session_data.timestamps[
+        self.synchronized_timestamps = self.raw_session_data.mocap_timestamps[
             freemocap_start_frame:freemocap_end_frame
         ]
 
@@ -133,9 +133,9 @@ class PupilFreemocapSynchronizer:
             eye_d=1,
         )
 
-        synchronized_session_data = FreemocapSessionDataClass(
-            timestamps=self.synchronized_timestamps,
-            mediapipe_skel_fr_mar_dim=self.raw_session_data.mediapipe_skel_fr_mar_dim[
+        synchronized_session_data = LaserSkeletonDataClass(
+            mocap_timestamps=self.synchronized_timestamps,
+            skeleton_frame_marker_xyz=self.raw_session_data.skeleton_frame_marker_xyz[
                 freemocap_start_frame:freemocap_end_frame, :, :
             ],
             right_eye_pupil_labs_data=synchronized_right_eye_data,
@@ -297,7 +297,7 @@ class PupilFreemocapSynchronizer:
         ###########################
         fig = plt.figure(num=653412, figsize=(10, 20))
         fig.suptitle("Raw data")
-        ax1 = fig.add_subplot(411)
+        ax1 = fig.add_subplot(4, 1, 1)
         ax1.plot(
             self.raw_session_data.right_eye_pupil_labs_data.timestamps,
             self.raw_session_data.right_eye_pupil_labs_data.pupil_center_normal_x,
@@ -318,7 +318,7 @@ class PupilFreemocapSynchronizer:
         )
         ax1.legend(loc="upper left")
 
-        ax2 = fig.add_subplot(412)
+        ax2 = fig.add_subplot(4, 1, 2)
         ax2.plot(
             self.raw_session_data.right_eye_pupil_labs_data.timestamps,
             self.raw_session_data.right_eye_pupil_labs_data.theta,
@@ -333,7 +333,7 @@ class PupilFreemocapSynchronizer:
         )
         ax2.legend(loc="upper left")
 
-        ax3 = fig.add_subplot(413)
+        ax3 = fig.add_subplot(4, 1, 3)
         ax3.plot(
             self.synchronized_timestamps,
             self.left_eye_pupil_center_normal_x,
@@ -354,7 +354,7 @@ class PupilFreemocapSynchronizer:
         )
         ax3.legend(loc="upper left")
 
-        ax4 = fig.add_subplot(414)
+        ax4 = fig.add_subplot(4, 1, 4)
         ax4.plot(
             self.raw_session_data.left_eye_pupil_labs_data.timestamps,
             self.raw_session_data.left_eye_pupil_labs_data.theta,
@@ -448,3 +448,5 @@ class PupilFreemocapSynchronizer:
         ax4.legend(loc="upper left")
 
         plt.show()
+
+        f = 101

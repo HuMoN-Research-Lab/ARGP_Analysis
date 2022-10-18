@@ -8,10 +8,10 @@ from pupil_labs_stuff.data_classes.rotation_data_class import RotationDataClass
 
 
 @dataclass
-class FreemocapSessionDataClass:
+class LaserSkeletonDataClass:
     session_id: str = None
-    timestamps: np.ndarray = None
-    mediapipe_skel_fr_mar_dim: np.ndarray = None
+    mocap_timestamps: np.ndarray = None
+    skeleton_frame_marker_xyz: np.ndarray = None
     right_eye_pupil_labs_data: PupilLabsDataClass = None
     left_eye_pupil_labs_data: PupilLabsDataClass = None
     head_rotation_data: RotationDataClass = None

@@ -6,8 +6,7 @@ from typing import Union
 import numpy as np
 import pandas as pd
 
-from pupil_labs_stuff.convert_pupil_labs_data_class_to_dict import convert_pupil_labs_data_class_to_dict
-from pupil_labs_stuff.data_classes.freemocap_session_data_class import FreemocapSessionDataClass
+from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkeletonDataClass
 from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilDataHandler
 from pupil_labs_stuff.pupil_freemocap_synchronizer import PupilFreemocapSynchronizer
 from pupil_labs_stuff.qt_gl_laser_skeleton_visualizer import QtGlLaserSkeletonVisualizer
@@ -21,7 +20,7 @@ logger.setLevel(logging.INFO)
 
 class PupilFreemocapCalibrationPipelineOrchestrator:
     session_data_loader: SessionDataLoader = None
-    raw_session_data = FreemocapSessionDataClass()
+    raw_session_data = LaserSkeletonDataClass()
     vor_frame_start: int = None
     vor_frame_end: int = None
 
@@ -65,18 +64,18 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         ####
         # load raw freemocap data
         ####
-        self.raw_session_data.timestamps = (
+        self.raw_session_data.mocap_timestamps = (
             self.session_data_loader.load_freemocap_unix_timestamps()
         )
         logger.info(
-            f"self.raw_session_data.freemocap_timestamps.shape: {self.raw_session_data.timestamps.shape}"
+            f"self.raw_session_data.freemocap_timestamps.shape: {self.raw_session_data.mocap_timestamps.shape}"
         )
 
-        self.raw_session_data.mediapipe_skel_fr_mar_dim = (
+        self.raw_session_data.skeleton_frame_marker_xyz = (
             self.session_data_loader.load_mediapipe_data()
         )
         logger.info(
-            f"self.raw_session_data.mediapipe_skel_fr_mar_dim.shape: {self.raw_session_data.mediapipe_skel_fr_mar_dim.shape}"
+            f"self.raw_session_data.mediapipe_skel_fr_mar_dim.shape: {self.raw_session_data.skeleton_frame_marker_xyz.shape}"
         )
 
         ####
@@ -109,7 +108,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # Calculate Head Rotation matrix for each frame (gaze data will be rotated by head_rot, then calibrated_offset_rot)
         ####
         rotation_matrix_calculator = RotationMatrixCalculator(
-            synchronized_session_data.mediapipe_skel_fr_mar_dim
+            synchronized_session_data.skeleton_frame_marker_xyz
         )
 
         synchronized_session_data.head_rotation_data = (
@@ -138,13 +137,13 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # Perform Vestibular-Ocular-Reflex based calibration (see methods from (Matthis et al, 2018 and 2022) for deetos)
         ####
         vor_calibrator = VorCalibrator(
-            synchronized_session_data.mediapipe_skel_fr_mar_dim.copy(),
+            synchronized_session_data.skeleton_frame_marker_xyz.copy(),
             vor_start_frame=self.vor_frame_start,
             vor_end_frame=self.vor_frame_end,
             debug=False,
         )
         right_index_fingertip_idx = 41  # pretty sure this is right?
-        fixation_point_fr_xyz = synchronized_session_data.mediapipe_skel_fr_mar_dim[
+        fixation_point_fr_xyz = synchronized_session_data.skeleton_frame_marker_xyz[
             self.vor_frame_start : self.vor_frame_end, right_index_fingertip_idx, :
         ]
         # right eye
@@ -180,7 +179,8 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # end_frame=self.vor_frame_end)
         qt_gl_laser_skeleton.start_animation()
 
-    def run_qualisys(self):
+    def run_qualisys(self,
+                     qualisys_timestamps_unix_npy: np.ndarray):
 
         f = 1232
 
@@ -204,9 +204,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
             pupil_data_handler.get_eye_data("left")
         )
 
-        pupil_labs_dict = convert_pupil_labs_data_class_to_dict(
-            left_eye_pupil_labs_data=self.raw_session_data.left_eye_pupil_labs_data,
-            right_eye_pupil_labs_data=self.raw_session_data.right_eye_pupil_labs_data)
+        self.raw_session_data.mocap_timestamps = qualisys_timestamps_unix_npy  # TODO this is dangerous, consider refactoring
 
         ####
         # Synchronize pupil data with freemocap data - results in synchronized_session_data (each stream has exactly the same number of frames)
@@ -216,7 +214,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         ).synchronize(
             vor_frame_start=self.vor_frame_start,
             vor_frame_end=self.vor_frame_end,
-            debug=False,
+            debug=True,
         )
 
         logger.info(
@@ -227,7 +225,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # Calculate Head Rotation matrix for each frame (gaze data will be rotated by head_rot, then calibrated_offset_rot)
         ####
         rotation_matrix_calculator = RotationMatrixCalculator(
-            synchronized_session_data.mediapipe_skel_fr_mar_dim
+            synchronized_session_data.skeleton_frame_marker_xyz
         )
 
         synchronized_session_data.head_rotation_data = (
@@ -256,13 +254,13 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # Perform Vestibular-Ocular-Reflex based calibration (see methods from (Matthis et al, 2018 and 2022) for deetos)
         ####
         vor_calibrator = VorCalibrator(
-            synchronized_session_data.mediapipe_skel_fr_mar_dim.copy(),
+            synchronized_session_data.skeleton_frame_marker_xyz.copy(),
             vor_start_frame=self.vor_frame_start,
             vor_end_frame=self.vor_frame_end,
             debug=False,
         )
         right_index_fingertip_idx = 41  # pretty sure this is right?
-        fixation_point_fr_xyz = synchronized_session_data.mediapipe_skel_fr_mar_dim[
+        fixation_point_fr_xyz = synchronized_session_data.skeleton_frame_marker_xyz[
                                 self.vor_frame_start: self.vor_frame_end, right_index_fingertip_idx, :
                                 ]
         # right eye

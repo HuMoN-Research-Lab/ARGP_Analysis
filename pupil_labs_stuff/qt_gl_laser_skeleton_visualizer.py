@@ -10,7 +10,7 @@ import numpy as np
 import sys
 from mediapipe.python.solutions import holistic as mp_holistic
 
-from pupil_labs_stuff.data_classes.freemocap_session_data_class import FreemocapSessionDataClass
+from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkeletonDataClass
 from pupil_labs_stuff.data_classes.rotation_data_class import RotationDataClass
 from pupil_labs_stuff.session_data_loader import SessionDataLoader
 
@@ -22,7 +22,7 @@ class QtGlLaserSkeletonVisualizer:
 
     def __init__(
         self,
-        session_data: FreemocapSessionDataClass = None,
+        session_data: LaserSkeletonDataClass = None,
         mediapipe_skel_fr_mar_xyz: np.ndarray = None,
         start_frame: int = None,
         end_frame: int = None,
@@ -31,7 +31,7 @@ class QtGlLaserSkeletonVisualizer:
 
         if session_data is not None:
             self.session_data = session_data
-            self.mediapipe_fr_mar_xyz = session_data.mediapipe_skel_fr_mar_dim
+            self.mediapipe_fr_mar_xyz = session_data.skeleton_frame_marker_xyz
         elif mediapipe_skel_fr_mar_xyz is not None:
             self.mediapipe_fr_mar_xyz = mediapipe_skel_fr_mar_xyz
         else:

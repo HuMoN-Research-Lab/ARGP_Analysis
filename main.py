@@ -27,8 +27,8 @@ if __name__ == "__main__":
 
 
     # VOR Frames
-    vor_start = 1000
-    vor_end = 2000
+    vor_start = 2500
+    vor_end = 6000
 
     qualisys_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name
     pupil_data_path = base_data_path / subject_id / pupil_file_path / pupil_file_name
@@ -36,6 +36,19 @@ if __name__ == "__main__":
 
     qualisys_df = pd.read_csv(filepath_or_buffer=str(qualisys_data_path), delimiter='\t', header=11)
     pupil_df = pd.read_csv(filepath_or_buffer=str(pupil_data_path), delimiter=',', header=0)
+
+    qualisys_start_time_string = pd.read_csv(filepath_or_buffer=str(qualisys_data_path), delimiter='\t', skiprows=7, nrows=1, header=None)[1][0]
+
+    qualisys_start_time_unix_local_time = pd.Timestamp(qualisys_start_time_string.replace(",", "")).timestamp()
+
+    time_zone_offset_in_seconds = 4*60*60  # TODO pull time manipulation into another function
+
+    pupil_qualisys_temporal_offset_in_seconds = 0  # TODO Figure out the hard coded offset for this dataset.
+
+    qualisys_start_time_unix = qualisys_start_time_unix_local_time + time_zone_offset_in_seconds + pupil_qualisys_temporal_offset_in_seconds
+
+    # TODO add the unix_npy to the qualisys_df
+    qualisys_timestamps_unix_npy = qualisys_df['Time'].to_numpy() + qualisys_start_time_unix
 
     subject_json_path = qualisys_data_path / base_data_path / subject_id / 'processing_jsons'
 
@@ -45,11 +58,14 @@ if __name__ == "__main__":
 
     generic_skelly_dict = create_generic_skeleton_from_qualisys_data(subject_qualisys_json_path, qualisys_df)
 
+
+
     create_laser_skeleton(generic_skelly_dict=generic_skelly_dict,
                           pupil_df=pupil_df,
                           pupil_json_path=pupil_json_path,
                           vor_start=vor_start,
-                          vor_end=vor_end)
+                          vor_end=vor_end,
+                          qualisys_timestamps_unix_npy=qualisys_timestamps_unix_npy)
 
     data_vis_debug(generic_skelly_dict, select_frame=np.array([1500]))
 
