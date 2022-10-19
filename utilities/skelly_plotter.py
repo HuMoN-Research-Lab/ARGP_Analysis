@@ -1,6 +1,7 @@
 import matplotlib
-from matplotlib import pyplot as plt
+import numpy
 from numpy import ndarray
+from matplotlib import pyplot as plt
 import seaborn as sns
 
 
@@ -15,6 +16,24 @@ def skelly_plotter(generic_skelly_dict: dict,
     ax = fig.add_subplot(111, projection='3d')
     # ax.axis('equal')
 
+    # get mean of all joint plotted
+    temp_x = numpy.zeros(1)
+    temp_y = numpy.zeros(1)
+    temp_z = numpy.zeros(1)
+
+    for key in generic_skelly_dict:
+
+        temp_joint_xyz = generic_skelly_dict[key]
+
+        temp_x += temp_joint_xyz[select_frames[0]][0]
+        temp_y += temp_joint_xyz[select_frames[0]][1]
+        temp_z += temp_joint_xyz[select_frames[0]][2]
+
+    mean_joint_x = temp_x / len(generic_skelly_dict)
+    mean_joint_y = temp_y / len(generic_skelly_dict)
+    mean_joint_z = temp_z / len(generic_skelly_dict)
+
+    # plot each joint
     for key in generic_skelly_dict:
 
         joint_xyz = generic_skelly_dict[key]
@@ -27,12 +46,14 @@ def skelly_plotter(generic_skelly_dict: dict,
         ax.set_ylabel("Y")
         ax.set_zlabel("Z")
 
-        ax.scatter(x, y, z)
+        ax.scatter(x, y, z, c='#808080')
 
-    ax.set_zlim([0, 1800])
+    plot_boundary = 900
+
+    ax.set_xlim([mean_joint_x[0]-plot_boundary, mean_joint_x[0]+plot_boundary])
+    ax.set_ylim([mean_joint_y[0]-plot_boundary, mean_joint_y[0]+plot_boundary])
+    ax.set_zlim([mean_joint_z[0]-plot_boundary, mean_joint_z[0]+plot_boundary])
     ax.view_init(0, 90)
-
-    # TODO find some center point and then do +/- the same amount from all of them; this will equalize the 3d axes...
 
     plt.show()
 

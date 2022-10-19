@@ -46,6 +46,8 @@ if __name__ == "__main__":
 
     generic_skelly_dict = create_generic_skeleton_from_qualisys_data(subject_qualisys_json_path, qualisys_df)
 
+    data_vis_debug(generic_skelly_dict, select_frame=np.array([3000]))
+
     create_laser_skeleton(generic_skelly_dict=generic_skelly_dict,
                           pupil_df=pupil_df,
                           pupil_json_path=pupil_json_path,
@@ -53,6 +55,5 @@ if __name__ == "__main__":
                           vor_end=vor_end,
                           qualisys_timestamps_unix_npy=qualisys_timestamps_unix_npy)
 
-    data_vis_debug(generic_skelly_dict, select_frame=np.array([1500]))
 
     f = 'debug_stop'

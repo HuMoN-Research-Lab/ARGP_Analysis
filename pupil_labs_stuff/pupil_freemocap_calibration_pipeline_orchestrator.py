@@ -79,7 +79,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         )
 
         ####
-        # load pupil data  # TODO this is where trent comes in - either format my data to fr_mar_dim or adapt to dicts
+        # load pupil data
         ####
         pupil_data_handler = self.session_data_loader.load_pupil_data()
         self.raw_session_data.right_eye_pupil_labs_data = (
@@ -189,7 +189,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         )
 
         ####
-        # load pupil data  # TODO this is where trent comes in - either format my data to fr_mar_dim or adapt to dicts
+        # load pupil data
         ####
         pupil_data_handler = PupilDataHandler(self._pupil_df)
         pupil_data_handler.convert_to_unix_timestamps(self._pupil_json_dict)

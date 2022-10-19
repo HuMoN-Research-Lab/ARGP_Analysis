@@ -18,7 +18,7 @@ def get_qualisys_unix_timestamps(qualisys_df: pd.DataFrame,
 
     qualisys_start_time_unix = qualisys_start_time_unix_local_time + time_zone_offset_in_seconds + pupil_qualisys_temporal_offset_in_seconds
 
-    # TODO add the unix_npy to the qualisys_df
+    # TODO I could add this to the qualisys data frame and carry it through in the generic skelly dict, but I don't need to
     qualisys_timestamps_unix_npy = qualisys_df['Time'].to_numpy() + qualisys_start_time_unix
 
     return qualisys_timestamps_unix_npy
