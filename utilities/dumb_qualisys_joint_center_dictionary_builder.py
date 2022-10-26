@@ -1,6 +1,6 @@
 
 qualisys_joint_center_dict = {
-        "head_xyz": {
+        "head_center_xyz": {
                 "HeadL": 0.5,
                 "HeadR": 0.5
         },

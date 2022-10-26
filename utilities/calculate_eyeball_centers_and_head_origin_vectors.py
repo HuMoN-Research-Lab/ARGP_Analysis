@@ -7,10 +7,10 @@ from utilities.debug_plot_eyeball_centers_at_origin import debug_plot_eyeball_ce
 
 
 def calculate_eyeball_centers_and_head_origin_vectors(skelly_dict: dict,
-                                                      debug: bool) -> [ndarray, ndarray]:
+                                                      debug: bool) -> dict:
     # built based on "calcEyeballCenterQualisys.m" from matlab argp & jon skellys
 
-    head_center_xyz = skelly_dict['head_xyz']
+    head_center_xyz = skelly_dict['head_center_xyz']
     head_left_xyz = skelly_dict['head_left_xyz']
     head_top_xyz = skelly_dict['head_top_xyz']
     head_right_xyz = skelly_dict['head_right_xyz']
@@ -56,4 +56,17 @@ def calculate_eyeball_centers_and_head_origin_vectors(skelly_dict: dict,
                                              zeroed_left_eyeball_center_xyz=zeroed_left_eyeball_center_xyz,
                                              zeroed_right_eyeball_center_xyz=zeroed_right_eyeball_center_xyz)
 
-    return [left_eyeball_center_xyz, right_eyeball_center_xyz]
+    eyeball_and_head_rotation_dict = {
+        "left_eyeball_center_xyz": left_eyeball_center_xyz,
+
+        "right_eyeball_center_xyz": right_eyeball_center_xyz,
+
+        "head_x_hat": head_x_hat,
+
+        "head_y_hat": head_y_hat,
+
+        "head_z_hat": head_z_hat}
+
+    generic_skelly_dict = skelly_dict | eyeball_and_head_rotation_dict
+
+    return generic_skelly_dict
