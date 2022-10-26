@@ -14,6 +14,6 @@ def create_generic_skeleton_from_qualisys_data(subject_qualisys_json_path: Path,
 
     skelly_dict = qualisys_to_generic_skeleton_converter(qualisys_dict)
 
-    generic_skelly_dict = calculate_eyeball_centers_and_head_origin_vectors(skelly_dict)
+    generic_skelly_dict = calculate_eyeball_centers_and_head_origin_vectors(skelly_dict, debug=True)
 
-    return generic_skelly_dict
+    return skelly_dict

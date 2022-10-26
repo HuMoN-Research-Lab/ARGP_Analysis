@@ -5,8 +5,8 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 
 
-def skelly_plotter(generic_skelly_dict: dict,
-                   select_frames: ndarray):
+def debug_skelly_plotter(generic_skelly_dict: dict,
+                         select_frame: ndarray):
 
     sns.set(style="darkgrid")
 
@@ -14,7 +14,6 @@ def skelly_plotter(generic_skelly_dict: dict,
     plt.ion()  # stands for "interactive mode on"
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    # ax.axis('equal')
 
     # get mean of all joint plotted
     temp_x = numpy.zeros(1)
@@ -22,12 +21,11 @@ def skelly_plotter(generic_skelly_dict: dict,
     temp_z = numpy.zeros(1)
 
     for key in generic_skelly_dict:
-
         temp_joint_xyz = generic_skelly_dict[key]
 
-        temp_x += temp_joint_xyz[select_frames[0]][0]
-        temp_y += temp_joint_xyz[select_frames[0]][1]
-        temp_z += temp_joint_xyz[select_frames[0]][2]
+        temp_x += temp_joint_xyz[select_frame[0]][0]
+        temp_y += temp_joint_xyz[select_frame[0]][1]
+        temp_z += temp_joint_xyz[select_frame[0]][2]
 
     mean_joint_x = temp_x / len(generic_skelly_dict)
     mean_joint_y = temp_y / len(generic_skelly_dict)
@@ -35,12 +33,11 @@ def skelly_plotter(generic_skelly_dict: dict,
 
     # plot each joint
     for key in generic_skelly_dict:
-
         joint_xyz = generic_skelly_dict[key]
 
-        x = joint_xyz[select_frames[0]][0]
-        y = joint_xyz[select_frames[0]][1]
-        z = joint_xyz[select_frames[0]][2]
+        x = joint_xyz[select_frame[0]][0]
+        y = joint_xyz[select_frame[0]][1]
+        z = joint_xyz[select_frame[0]][2]
 
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
@@ -50,9 +47,9 @@ def skelly_plotter(generic_skelly_dict: dict,
 
     plot_boundary = 900
 
-    ax.set_xlim([mean_joint_x[0]-plot_boundary, mean_joint_x[0]+plot_boundary])
-    ax.set_ylim([mean_joint_y[0]-plot_boundary, mean_joint_y[0]+plot_boundary])
-    ax.set_zlim([mean_joint_z[0]-plot_boundary, mean_joint_z[0]+plot_boundary])
+    ax.set_xlim([mean_joint_x[0] - plot_boundary, mean_joint_x[0] + plot_boundary])
+    ax.set_ylim([mean_joint_y[0] - plot_boundary, mean_joint_y[0] + plot_boundary])
+    ax.set_zlim([mean_joint_z[0] - plot_boundary, mean_joint_z[0] + plot_boundary])
     ax.view_init(0, 90)
 
     plt.show()

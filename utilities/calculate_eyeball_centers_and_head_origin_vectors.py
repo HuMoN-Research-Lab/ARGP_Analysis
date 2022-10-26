@@ -1,4 +1,5 @@
 import numpy as np
+from numpy import ndarray
 
 from sklearn.preprocessing import normalize
 
@@ -6,7 +7,7 @@ from utilities.debug_plot_eyeball_centers_at_origin import debug_plot_eyeball_ce
 
 
 def calculate_eyeball_centers_and_head_origin_vectors(skelly_dict: dict,
-                                                      debug: bool) -> [dict, dict]:
+                                                      debug: bool) -> [ndarray, ndarray]:
     # built based on "calcEyeballCenterQualisys.m" from matlab argp & jon skellys
 
     head_center_xyz = skelly_dict['head_xyz']
@@ -44,7 +45,8 @@ def calculate_eyeball_centers_and_head_origin_vectors(skelly_dict: dict,
     right_eyeball_center_xyz = zeroed_right_eyeball_center_xyz + head_center_xyz
 
     if debug:
-        debug_plot_eyeball_centers_at_origin(head_x_hat=head_x_hat,
+        debug_plot_eyeball_centers_at_origin(this_frame=np.array([3000]),
+                                             head_x_hat=head_x_hat,
                                              head_y_hat=head_y_hat,
                                              head_z_hat=head_z_hat,
                                              zeroed_head_front_to_origin=zeroed_head_front_to_origin,
@@ -54,4 +56,4 @@ def calculate_eyeball_centers_and_head_origin_vectors(skelly_dict: dict,
                                              zeroed_left_eyeball_center_xyz=zeroed_left_eyeball_center_xyz,
                                              zeroed_right_eyeball_center_xyz=zeroed_right_eyeball_center_xyz)
 
-    f = 333
+    return [left_eyeball_center_xyz, right_eyeball_center_xyz]
