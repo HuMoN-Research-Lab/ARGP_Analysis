@@ -8,6 +8,7 @@ from utilities.create_generic_skeleton_from_qualisys_data import create_generic_
 from utilities.create_laser_skeleton import create_laser_skeleton
 from utilities.data_vis_debug import data_vis_debug
 from utilities.get_qualisys_unix_timestamps import get_qualisys_unix_timestamps
+from utilities.skelly_plotter import skelly_plotter
 
 logger = logging.getLogger(__name__)
 # logger.setLevel(INFO)
@@ -46,7 +47,7 @@ if __name__ == "__main__":
 
     generic_skelly_dict = create_generic_skeleton_from_qualisys_data(subject_qualisys_json_path, qualisys_df)
 
-    data_vis_debug(generic_skelly_dict, select_frame=np.array([3000]))
+    skelly_plotter(generic_skelly_dict, select_frames=np.array([3000]))
 
     create_laser_skeleton(generic_skelly_dict=generic_skelly_dict,
                           pupil_df=pupil_df,
