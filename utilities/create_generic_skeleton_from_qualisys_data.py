@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas
 
-from utilities.calculate_eyeball_centers_and_head_origin_vectors import calculate_eyeball_centers_and_head_origin_vectors
+from utilities.calculate_eyeball_centers import calculate_eyeball_centers
 from utilities.qualisys_json_creator import qualisys_json_creator
 from utilities.qualisys_to_generic_skeleton_converter import qualisys_to_generic_skeleton_converter
 
@@ -14,8 +14,6 @@ def create_generic_skeleton_from_qualisys_data(subject_qualisys_json_path: Path,
 
     skelly_dict = qualisys_to_generic_skeleton_converter(qualisys_dict)
 
-    generic_skelly_dict = calculate_eyeball_centers_and_head_origin_vectors(skelly_dict, debug=True)
+    eye_ball_centers_dict = calculate_eyeball_centers(skelly_dict, debug=True)
 
-    # create a function that gets the head rotation data from the qualisys skeleton -- or that calculates it from the head origin vectors
-
-    return generic_skelly_dict
+    return skelly_dict | eye_ball_centers_dict

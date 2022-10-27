@@ -3,11 +3,12 @@ from numpy import ndarray
 
 from sklearn.preprocessing import normalize
 
+from pupil_labs_stuff.rotation_matrix_calculator_qualisys import RotationMatrixCalculator
 from utilities.debug_plot_eyeball_centers_at_origin import debug_plot_eyeball_centers_at_origin
 
 
-def calculate_eyeball_centers_and_head_origin_vectors(skelly_dict: dict,
-                                                      debug: bool) -> dict:
+def calculate_eyeball_centers(skelly_dict: dict,
+                              debug: bool) -> dict:
     # built based on "calcEyeballCenterQualisys.m" from matlab argp & jon skellys
 
     head_center_xyz = skelly_dict['head_center_xyz']
@@ -56,17 +57,5 @@ def calculate_eyeball_centers_and_head_origin_vectors(skelly_dict: dict,
                                              zeroed_left_eyeball_center_xyz=zeroed_left_eyeball_center_xyz,
                                              zeroed_right_eyeball_center_xyz=zeroed_right_eyeball_center_xyz)
 
-    eyeball_and_head_rotation_dict = {
-        "left_eyeball_center_xyz": left_eyeball_center_xyz,
+    return {"left_eyeball_center_xyz": left_eyeball_center_xyz, "right_eyeball_center_xyz": right_eyeball_center_xyz}
 
-        "right_eyeball_center_xyz": right_eyeball_center_xyz,
-
-        "head_x_hat": head_x_hat,
-
-        "head_y_hat": head_y_hat,
-
-        "head_z_hat": head_z_hat}
-
-    generic_skelly_dict = skelly_dict | eyeball_and_head_rotation_dict
-
-    return generic_skelly_dict

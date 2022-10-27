@@ -8,6 +8,7 @@ from utilities.create_generic_skeleton_from_qualisys_data import create_generic_
 from utilities.create_laser_skeleton import create_laser_skeleton
 from utilities.get_qualisys_unix_timestamps import get_qualisys_unix_timestamps
 from utilities.debug_skelly_plotter import debug_skelly_plotter
+from utilities.calculate_rotation_matrix_from_qualisys_data import calculate_rotation_matrix_from_qualisys_data
 
 logger = logging.getLogger(__name__)
 # logger.setLevel(INFO)
@@ -48,8 +49,11 @@ if __name__ == "__main__":
 
     generic_skelly_dict = create_generic_skeleton_from_qualisys_data(subject_qualisys_json_path, qualisys_df)
 
+    head_rotation_matrix = calculate_rotation_matrix_from_qualisys_data(generic_skelly_dict)
+
     debug_skelly_plotter(generic_skelly_dict, select_frame=np.array([3000]))
 
+    # TODO I need to replace the calibration point with the marker/target on the ground instead of the finger tip
     create_laser_skeleton(generic_skelly_dict=generic_skelly_dict,
                           pupil_df=pupil_df,
                           pupil_json_path=pupil_json_path,

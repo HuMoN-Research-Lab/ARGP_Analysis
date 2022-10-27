@@ -259,10 +259,12 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
             vor_end_frame=self.vor_frame_end,
             debug=False,
         )
-        right_index_fingertip_idx = 41  # pretty sure this is right?
-        fixation_point_fr_xyz = synchronized_session_data.skeleton_frame_marker_xyz[
-                                self.vor_frame_start: self.vor_frame_end, right_index_fingertip_idx, :
-                                ]
+
+        vor_frame_length = self.vor_frame_end - self.vor_frame_start
+
+        print('HARD CODING fixation point for VOR')
+        fixation_point_fr_xyz = [438.0, 3026.6, 4.6]*vor_frame_length
+
         # right eye
         synchronized_session_data.right_gaze_vector_endpoint_fr_xyz = (
             vor_calibrator.calibrate(
