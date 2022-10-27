@@ -16,4 +16,6 @@ def create_generic_skeleton_from_qualisys_data(subject_qualisys_json_path: Path,
 
     generic_skelly_dict = calculate_eyeball_centers_and_head_origin_vectors(skelly_dict, debug=True)
 
+    # create a function that gets the head rotation data from the qualisys skeleton -- or that calculates it from the head origin vectors
+
     return generic_skelly_dict
