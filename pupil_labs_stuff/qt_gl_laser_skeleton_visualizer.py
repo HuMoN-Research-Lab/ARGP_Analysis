@@ -322,14 +322,14 @@ class QtGlLaserSkeletonVisualizer:
             elif dimension == "z":
                 dimension = 2
 
-            if dimension > rotation_data.rotation_matricies[0].shape[1]:
+            if dimension > rotation_data.rotation_matrices[0].shape[1]:
                 raise ValueError(
                     "dimension must be `x`, `y`, `z`, or an integer less than the number of dimensions in the rotation matrix"
                 )
         except:
             raise ValueError("something weird about the `dimension` argument")
 
-        this_rot_mat = rotation_data.rotation_matricies[frame_number]
+        this_rot_mat = rotation_data.rotation_matrices[frame_number]
         this_axis_vector_endpoint_xyz = rotation_data.local_origin_fr_xyz[
             frame_number, :
         ] + (this_rot_mat[dimension, :] * scale)

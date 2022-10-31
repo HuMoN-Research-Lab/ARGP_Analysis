@@ -54,7 +54,6 @@ if __name__ == "__main__":
     debug_skelly_plotter(generic_skelly_dict, select_frame=np.array([3000]))
 
     create_laser_skeleton(generic_skelly_dict=generic_skelly_dict,
-                          head_rotation_data=head_rotation_data,
                           pupil_df=pupil_df,
                           pupil_json_path=pupil_json_path,
                           vor_start=vor_start,

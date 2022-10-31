@@ -224,7 +224,7 @@ class RotationMatrixCalculator:
         )
 
     def show_head_rotation_debug_plot(self, rotation_data: RotationDataClass):
-        rotation_matricies = rotation_data.rotation_matricies
+        rotation_matricies = rotation_data.rotation_matrices
         local_origin_fr_xyz = rotation_data.local_origin_fr_xyz
 
         x_hat_xyz = np.asarray(

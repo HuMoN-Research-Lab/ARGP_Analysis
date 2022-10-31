@@ -11,7 +11,7 @@ from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkel
 from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilDataHandler
 from pupil_labs_stuff.pupil_freemocap_synchronizer import PupilFreemocapSynchronizer
 from pupil_labs_stuff.qt_gl_laser_skeleton_visualizer import QtGlLaserSkeletonVisualizer
-from pupil_labs_stuff.rotation_matrix_calculator import RotationMatrixCalculator
+from pupil_labs_stuff.rotation_matrix_calculator_qualisys import RotationMatrixCalculator
 from pupil_labs_stuff.session_data_loader import SessionDataLoader
 from pupil_labs_stuff.vor_calibrator import VorCalibrator
 
@@ -30,7 +30,6 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         session_path: Union[Path, str] = None,  # None makes it an optional parameter - gives it a default value
         debug: bool = False,
         generic_skelly_dict: dict = None,
-        head_rotation_data: ndarray = None,
         pupil_df: pd.DataFrame = None,
         pupil_json_path: Path = None,
         vor_frame_start: int = None,
@@ -48,7 +47,6 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
 
         if generic_skelly_dict is not None:
             self._generic_skelly_dict = generic_skelly_dict
-            self._head_rotation_matrix = head_rotation_data
             self._pupil_df = pupil_df
             self._pupil_json_dict = json.load(open(pupil_json_path))
 
@@ -119,21 +117,21 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         )
 
         synchronized_session_data.right_eye_socket_rotation_data = (
-            rotation_matrix_calculator.calculate_eye_rotation_matricies(
+            rotation_matrix_calculator.calculate_eye_rotation_matrices(
                 eye="right",
                 debug=False,
             )
         )
 
         synchronized_session_data.left_eye_socket_rotation_data = (
-            rotation_matrix_calculator.calculate_eye_rotation_matricies(
+            rotation_matrix_calculator.calculate_eye_rotation_matrices(
                 "left",
                 debug=False,
             )
         )
 
         logger.info(
-            f"len(synchronized_session_data.head_rotation_data.head_rotation_matricies): {len(synchronized_session_data.head_rotation_data.rotation_matricies)}"
+            f"len(synchronized_session_data.head_rotation_data.head_rotation_matricies): {len(synchronized_session_data.head_rotation_data.rotation_matrices)}"
         )
 
         ####
@@ -212,7 +210,6 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # Trent feeding down the generic skelly and head rotation matrix because *shrug*
 
         self.raw_session_data._generic_skelly_dict = self._generic_skelly_dict
-        self.raw_session_data._head_rotation_matrix = self._head_rotation_matrix
 
         ####
         # Synchronize pupil data with freemocap data - results in synchronized_session_data (each stream has exactly the same number of frames)
@@ -233,36 +230,36 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # Calculate Head Rotation matrix for each frame (gaze data will be rotated by head_rot, then calibrated_offset_rot)
         ####
         rotation_matrix_calculator = RotationMatrixCalculator(
-            synchronized_session_data.skeleton_frame_marker_xyz
+            synchronized_session_data.skeleton_data
         )
 
         synchronized_session_data.head_rotation_data = (
             rotation_matrix_calculator.calculate_head_rotation_matricies(debug=False)
         )
 
-        synchronized_session_data.right_eye_socket_rotation_data = (
-            rotation_matrix_calculator.calculate_eye_rotation_matricies(
-                eye="right",
-                debug=False,
-            )
-        )
-
-        synchronized_session_data.left_eye_socket_rotation_data = (
-            rotation_matrix_calculator.calculate_eye_rotation_matricies(
-                "left",
-                debug=False,
-            )
-        )
+        # synchronized_session_data.right_eye_socket_rotation_data = (
+        #     rotation_matrix_calculator.calculate_eye_rotation_matrices(
+        #         eye="right",
+        #         debug=False,
+        #     )
+        # )
+        #
+        # synchronized_session_data.left_eye_socket_rotation_data = (
+        #     rotation_matrix_calculator.calculate_eye_rotation_matrices(
+        #         "left",
+        #         debug=False,
+        #     )
+        # )
 
         logger.info(
-            f"len(synchronized_session_data.head_rotation_data.head_rotation_matricies): {len(synchronized_session_data.head_rotation_data.rotation_matricies)}"
+            f"len(synchronized_session_data.head_rotation_data.head_rotation_matricies): {len(synchronized_session_data.head_rotation_data.rotation_matrices)}"
         )
 
         ####
         # Perform Vestibular-Ocular-Reflex based calibration (see methods from (Matthis et al, 2018 and 2022) for deetos)
         ####
         vor_calibrator = VorCalibrator(
-            synchronized_session_data.skeleton_frame_marker_xyz.copy(),
+            synchronized_session_data.skeleton_data.copy(),
             vor_start_frame=self.vor_frame_start,
             vor_end_frame=self.vor_frame_end,
             debug=False,
@@ -270,13 +267,14 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
 
         vor_frame_length = self.vor_frame_end - self.vor_frame_start
 
-        print('HARD CODING fixation point for VOR')
-        fixation_point_fr_xyz = [438.0, 3026.6, 4.6]*vor_frame_length
+        print('WARNING: HARD CODING fixation point for VOR')
+        fixation_point_fr_xyz = np.array([438.0, 3026.6, 4.6])  # *vor_frame_length
 
         # right eye
         synchronized_session_data.right_gaze_vector_endpoint_fr_xyz = (
             vor_calibrator.calibrate(
-                copy.deepcopy(synchronized_session_data.right_eye_pupil_labs_data),
+                copy.deepcopy(synchronized_session_data.right_eye_pupil_labs_data),  # TODO Jon says that I don't need the rotation matrix for the eye, I can just use the head. I only need the xyz position of the eye.
+                                                                                     # Figure out what I need to feed into the calibrator to get it to work with my data; see how `right_eye_socket_rotation_data` is used
                 copy.deepcopy(synchronized_session_data.right_eye_socket_rotation_data),
                 copy.deepcopy(synchronized_session_data.head_rotation_data),
                 fixation_point_fr_xyz,

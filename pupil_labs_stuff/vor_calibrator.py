@@ -46,15 +46,15 @@ class VorCalibrator:
         fixation_point_fr_xyz: np.ndarray,
     ) -> np.ndarray:
 
-        if not fixation_point_fr_xyz.shape[1] == 3:
+        if not fixation_point_fr_xyz.shape[0] == 3:  # changed `.shape[1]` to `.shape[0]`
             raise Exception(
                 "fixation_point_fr_xyz must be a numpy array with 3 columns"
             )
 
         eye_socket_origin_fr_xyz = eye_socket_rotation_data.local_origin_fr_xyz
-        eye_socket_rotation_matricies = eye_socket_rotation_data.rotation_matricies
+        eye_socket_rotation_matrices = eye_socket_rotation_data.rotation_matrices
 
-        head_rotation_matricies = head_rotation_data.rotation_matricies
+        head_rotation_matrices = head_rotation_data.rotation_matrices
 
         # gaze_unit_vector_end_point_fr_xyz = eye_socket_rotation_data.z_hat_norm_fr_xyz
         self.fixation_distance = self.get_distance_between_two_points(
@@ -86,8 +86,8 @@ class VorCalibrator:
         self.uncalibrated_gaze_vector_endpoint_fr_xyz = self.rotate_gaze_lasers(
             [0, 0, 0],
             eye_socket_origin_fr_xyz,
-            eye_socket_rotation_matricies,
-            head_rotation_matricies,
+            eye_socket_rotation_matrices,
+            head_rotation_matrices,
             gaze_x,
             gaze_y,
             gaze_z,
@@ -95,8 +95,8 @@ class VorCalibrator:
 
         self.calibrated_rotational_offset = self.calculate_optimal_rotational_offset(
             eye_socket_origin_fr_xyz,
-            eye_socket_rotation_matricies,
-            head_rotation_matricies,
+            eye_socket_rotation_matrices,
+            head_rotation_matrices,
             fixation_point_fr_xyz,
             gaze_x,
             gaze_y,
@@ -106,8 +106,8 @@ class VorCalibrator:
         gaze_vector_endpoint_fr_xyz = self.rotate_gaze_lasers(
             self.calibrated_rotational_offset,
             eye_socket_origin_fr_xyz,
-            eye_socket_rotation_matricies,
-            head_rotation_matricies,
+            eye_socket_rotation_matrices,
+            head_rotation_matrices,
             gaze_x,
             gaze_y,
             gaze_z,
@@ -118,8 +118,8 @@ class VorCalibrator:
     def calculate_optimal_rotational_offset(
         self,
         eye_socket_origin_fr_xyz: np.ndarray,
-        eye_socket_rotation_matricies: List[np.ndarray],
-        head_rotation_matricies,
+        eye_socket_rotation_matrices: List[np.ndarray],
+        head_rotation_matrices,
         fixation_point_fr_xyz: np.ndarray,
         gaze_x: np.ndarray,
         gaze_y: np.ndarray,
@@ -140,10 +140,10 @@ class VorCalibrator:
             initial_rotational_offset_guess,
             args=(
                 eye_socket_origin_fr_xyz[vor_frames, :],
-                eye_socket_rotation_matricies[
+                eye_socket_rotation_matrices[
                     self.vor_start_frame : self.vor_end_frame
                 ],
-                head_rotation_matricies[self.vor_start_frame : self.vor_end_frame],
+                head_rotation_matrices[self.vor_start_frame: self.vor_end_frame],
                 fixation_point_fr_xyz,
                 gaze_x[vor_frames],
                 gaze_y[vor_frames],
@@ -159,8 +159,8 @@ class VorCalibrator:
         self,
         rotational_offset_guess,
         eye_socket_origin_fr_xyz,
-        eye_socket_rotation_matricies,
-        head_rotation_matricies,
+        eye_socket_rotation_matrices,
+        head_rotation_matrices,
         fixation_point_fr_xyz,
         gaze_x,
         gaze_y,
@@ -170,8 +170,8 @@ class VorCalibrator:
         gaze_laser_endpoint_during_vor_fr_xyz = self.rotate_gaze_lasers(
             rotational_offset_guess,
             eye_socket_origin_fr_xyz,
-            eye_socket_rotation_matricies,
-            head_rotation_matricies,
+            eye_socket_rotation_matrices,
+            head_rotation_matrices,
             gaze_x,
             gaze_y,
             gaze_z,
@@ -281,11 +281,11 @@ class VorCalibrator:
     ):
         return np.linalg.norm(local_origin_fr_xyz - fixation_point_fr_xyz, axis=1)
 
-    def create_unrotated_gaze_lasers_from_eye_rotation_matrixies(
+    def create_unrotated_gaze_lasers_from_eye_rotation_matrixices(
         self,
         gaze_vector_start_point_fr_xyz: np.ndarray,
         gaze_unit_vector_end_point_fr_xyz: np.ndarray,
-        calbration_distance,
+        calibration_distance,
     ) -> np.ndarray:
         """
         Creates an unrotated gaze laser for each frame in the skeleton/gaze data. Returns a vector the same length as the calibration_distance, shooting our of the skeletons eye_sockets (as if they eyes were paralyzed).
@@ -300,7 +300,7 @@ class VorCalibrator:
 
         # scale gaze vector so it's the same norm/length as the calibration distance
         gaze_unit_vector_end_point_fr_xyz = (
-            gaze_unit_vector_end_point_fr_xyz * calbration_distance
+                gaze_unit_vector_end_point_fr_xyz * calibration_distance
         )
 
         # move it from an zero-centered reference frame to the eye socket reference frame
@@ -314,8 +314,8 @@ class VorCalibrator:
         self,
         rotational_offset,
         gaze_vector_start_point_fr_xyz,
-        eye_socket_rotation_matricies,
-        head_rotation_matricies,
+        eye_socket_rotation_matrices,
+        head_rotation_matrices,
         gaze_x,
         gaze_y,
         gaze_z,
@@ -323,7 +323,7 @@ class VorCalibrator:
         """ "
         - pin gaze to origin
         - rotate gaze vector by `calibrated_rotational_offset`
-        - rotate by measured eye movemens (from pupil labs)
+        - rotate by measured eye movements (from pupil labs)
          - translate gaze vector back to the eye socket (by adding eyeball center xyz)
         """
 
@@ -346,7 +346,7 @@ class VorCalibrator:
 
         # THEN rotate gaze vector by eye_socket_rotation_matrix to align it with the eye sockets gaze direction (i think)
         gaze_fr_xyz = [
-            np.transpose(head_rotation_matricies[this_frame_number])
+            np.transpose(head_rotation_matrices[this_frame_number])
             @ gaze_rotated_by_guess_fr_xyz[this_frame_number, :]
             for this_frame_number in range(gaze_rotated_by_guess_fr_xyz.shape[0])
         ]

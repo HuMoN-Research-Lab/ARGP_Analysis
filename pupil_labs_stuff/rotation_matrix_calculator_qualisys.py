@@ -61,7 +61,7 @@ class RotationMatrixCalculator:
 
         return head_rotation_data
 
-    def calculate_eye_rotation_matricies(
+    def calculate_eye_rotation_matrices(
             self,
             eye: str,
             normalize_length_by_x: bool = False,
@@ -182,7 +182,7 @@ class RotationMatrixCalculator:
         # z_hat_xyz = z_hat_xyz
 
         # create 3x3 cosine rotation matricies by stacking X_hat, Y_hat, and Z_hat
-        rotation_matricies = []
+        rotation_matrices = []
         frame_number = -1
         for this_x_hat_xyz, this_y_hat_xyz, this_z_hat_xyz in zip(
                 x_hat_xyz, y_hat_xyz, z_hat_xyz
@@ -199,15 +199,15 @@ class RotationMatrixCalculator:
             if not np.isnan(this_x_hat_xyz).any():
                 assert (this_rotation_matrix[:, 0] == this_x_hat_xyz).all()
 
-            rotation_matricies.append(this_rotation_matrix)
+            rotation_matrices.append(this_rotation_matrix)
 
-        rotation_matricies = [
+        rotation_matrices = [
             np.transpose(this_rotation_martix)
-            for this_rotation_martix in rotation_matricies
+            for this_rotation_martix in rotation_matrices
         ]
 
         return RotationDataClass(
-            rotation_matricies=rotation_matricies,
+            rotation_matrices=rotation_matrices,
             local_origin_fr_xyz=center_point_fr_xyz,
             x_hat_norm_fr_xyz=x_hat_xyz,
             y_hat_norm_fr_xyz=y_hat_xyz,
@@ -215,7 +215,7 @@ class RotationMatrixCalculator:
         )
 
     def show_head_rotation_debug_plot(self, rotation_data: RotationDataClass):
-        rotation_matricies = rotation_data.rotation_matricies
+        rotation_matricies = rotation_data.rotation_matrices
         local_origin_fr_xyz = rotation_data.local_origin_fr_xyz
 
         x_hat_xyz = np.asarray(
