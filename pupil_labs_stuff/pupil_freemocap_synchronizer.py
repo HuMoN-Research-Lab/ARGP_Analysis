@@ -49,16 +49,16 @@ class PupilFreemocapSynchronizer:
 
         # freemocap
         if any(mocap_timestamps >= start_time_unix):
-            freemocap_start_frame = np.where(mocap_timestamps >= start_time_unix)[
+            mocap_start_frame = np.where(mocap_timestamps >= start_time_unix)[
                 0
             ][0]
         else:
-            freemocap_start_frame = 0
+            mocap_start_frame = 0
 
         if any(mocap_timestamps <= end_time_unix):
-            freemocap_end_frame = np.where(mocap_timestamps <= end_time_unix)[0][-1]
+            mocap_end_frame = np.where(mocap_timestamps <= end_time_unix)[0][-1]
         else:
-            freemocap_end_frame = len(mocap_timestamps)
+            mocap_end_frame = len(mocap_timestamps)
 
         # right eye
         if any(right_eye_timestamps >= start_time_unix):
@@ -93,7 +93,7 @@ class PupilFreemocapSynchronizer:
 
         # rebase time onto freemocap's framerate (b/c it's slower than pupil) <- sloppy, assumes mocap slower than eye tracker, which is untrue for, say, GoPros
         self.synchronized_timestamps = self.raw_session_data.mocap_timestamps[
-            freemocap_start_frame:freemocap_end_frame
+            mocap_start_frame:mocap_end_frame
         ]
 
         logger.warning(
@@ -133,11 +133,14 @@ class PupilFreemocapSynchronizer:
             eye_d=1,
         )
 
+        synchronized_skeleton_data = {}
+
+        for key in self.raw_session_data._generic_skelly_dict:
+            synchronized_skeleton_data[key] = self.raw_session_data._generic_skelly_dict[key][mocap_start_frame:mocap_end_frame]
+
         synchronized_session_data = LaserSkeletonDataClass(
             mocap_timestamps=self.synchronized_timestamps,
-            skeleton_frame_marker_xyz=self.raw_session_data.skeleton_frame_marker_xyz[
-                freemocap_start_frame:freemocap_end_frame, :, :
-            ],
+            skeleton_data=synchronized_skeleton_data,
             right_eye_pupil_labs_data=synchronized_right_eye_data,
             left_eye_pupil_labs_data=synchronized_left_eye_data,
         )

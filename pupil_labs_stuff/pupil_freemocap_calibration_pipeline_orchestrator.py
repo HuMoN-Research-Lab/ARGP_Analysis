@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Union
 import numpy as np
 import pandas as pd
+from numpy import ndarray
 
 from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkeletonDataClass
 from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilDataHandler
@@ -29,6 +30,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         session_path: Union[Path, str] = None,  # None makes it an optional parameter - gives it a default value
         debug: bool = False,
         generic_skelly_dict: dict = None,
+        head_rotation_data: ndarray = None,
         pupil_df: pd.DataFrame = None,
         pupil_json_path: Path = None,
         vor_frame_start: int = None,
@@ -46,6 +48,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
 
         if generic_skelly_dict is not None:
             self._generic_skelly_dict = generic_skelly_dict
+            self._head_rotation_matrix = head_rotation_data
             self._pupil_df = pupil_df
             self._pupil_json_dict = json.load(open(pupil_json_path))
 
@@ -205,6 +208,11 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         )
 
         self.raw_session_data.mocap_timestamps = qualisys_timestamps_unix_npy  # TODO this is dangerous, consider refactoring
+
+        # Trent feeding down the generic skelly and head rotation matrix because *shrug*
+
+        self.raw_session_data._generic_skelly_dict = self._generic_skelly_dict
+        self.raw_session_data._head_rotation_matrix = self._head_rotation_matrix
 
         ####
         # Synchronize pupil data with freemocap data - results in synchronized_session_data (each stream has exactly the same number of frames)

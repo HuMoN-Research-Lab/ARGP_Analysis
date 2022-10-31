@@ -14,7 +14,7 @@ def get_qualisys_unix_timestamps(qualisys_df: pd.DataFrame,
     time_zone_offset_in_seconds = 4*60*60
 
     print('WARNING: pupil-qualisys temporal offset is hard-coded.')
-    pupil_qualisys_temporal_offset_in_seconds = 0  # TODO Figure out the hard coded offset for this dataset.
+    pupil_qualisys_temporal_offset_in_seconds = 5  # TODO Figure out the hard coded offset for this dataset.
 
     qualisys_start_time_unix = qualisys_start_time_unix_local_time + time_zone_offset_in_seconds + pupil_qualisys_temporal_offset_in_seconds
 

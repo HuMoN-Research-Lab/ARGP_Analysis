@@ -11,7 +11,7 @@ from pupil_labs_stuff.data_classes.rotation_data_class import RotationDataClass
 class LaserSkeletonDataClass:
     session_id: str = None
     mocap_timestamps: np.ndarray = None
-    skeleton_frame_marker_xyz: np.ndarray = None
+    skeleton_data: np.ndarray = None
     right_eye_pupil_labs_data: PupilLabsDataClass = None
     left_eye_pupil_labs_data: PupilLabsDataClass = None
     head_rotation_data: RotationDataClass = None
