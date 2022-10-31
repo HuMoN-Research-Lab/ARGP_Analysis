@@ -3,6 +3,7 @@ from typing import Union, List
 
 import keyboard
 import numpy as np
+from numpy import ndarray
 from scipy import optimize
 from matplotlib import pyplot as plt
 import matplotlib
@@ -23,13 +24,13 @@ class VorCalibrator:
 
     def __init__(
         self,
-        mediapipe_skel_fr_mar_xyz: np.ndarray,
+        generic_skelly_dict: dict,
         vor_start_frame: int = None,
         vor_end_frame: int = None,
         debug: bool = False,
     ):
         self.debug = debug
-        self.mediapipe_skel_fr_mar_xyz = mediapipe_skel_fr_mar_xyz
+        self.mediapipe_skel_fr_mar_xyz = generic_skelly_dict
         if vor_start_frame is not None:
             self.vor_start_frame = vor_start_frame
             if vor_end_frame is None:
@@ -40,26 +41,29 @@ class VorCalibrator:
 
     def calibrate(
         self,
+        eye_socket_origin_fr_xyz: ndarray,  # TDW added
         pupil_labs_eye_data: PupilLabsDataClass,
-        eye_socket_rotation_data: RotationDataClass,
+        # eye_socket_rotation_data: RotationDataClass,
         head_rotation_data: RotationDataClass,
         fixation_point_fr_xyz: np.ndarray,
     ) -> np.ndarray:
 
-        if not fixation_point_fr_xyz.shape[0] == 3:  # changed `.shape[1]` to `.shape[0]`
+        if not fixation_point_fr_xyz.shape[1] == 3:
             raise Exception(
                 "fixation_point_fr_xyz must be a numpy array with 3 columns"
             )
 
-        eye_socket_origin_fr_xyz = eye_socket_rotation_data.local_origin_fr_xyz
-        eye_socket_rotation_matrices = eye_socket_rotation_data.rotation_matrices
+        # eye_socket_origin_fr_xyz = eye_socket_rotation_data.local_origin_fr_xyz
+        # eye_socket_rotation_matrices = eye_socket_rotation_data.rotation_matrices
+
+        eye_socket_rotation_matrices = head_rotation_data.rotation_matrices  # just using the head for the eye...
 
         head_rotation_matrices = head_rotation_data.rotation_matrices
 
         # gaze_unit_vector_end_point_fr_xyz = eye_socket_rotation_data.z_hat_norm_fr_xyz
         self.fixation_distance = self.get_distance_between_two_points(
             fixation_point_fr_xyz,
-            eye_socket_origin_fr_xyz[self.vor_start_frame : self.vor_end_frame, :],
+            eye_socket_origin_fr_xyz[self.vor_start_frame: self.vor_end_frame, :],
         )
 
         # not sure why I need to do this, but Karl Muller did it so it's likely necessary

@@ -8,7 +8,8 @@ from pupil_labs_stuff.pupil_freemocap_calibration_pipeline_orchestrator import \
     PupilFreemocapCalibrationPipelineOrchestrator
 
 
-def create_laser_skeleton(generic_skelly_dict: dict,
+def create_laser_skeleton(session_path: Path,
+                          generic_skelly_dict: dict,
                           pupil_df: pd.DataFrame,
                           pupil_json_path: Path,
                           vor_start: int,
@@ -19,6 +20,7 @@ def create_laser_skeleton(generic_skelly_dict: dict,
 
     pupil_freemocap_calibration_pipeline_orchestrator = (
         PupilFreemocapCalibrationPipelineOrchestrator(
+            session_path=session_path,
             generic_skelly_dict=generic_skelly_dict,
             pupil_df=pupil_df,
             pupil_json_path=pupil_json_path,

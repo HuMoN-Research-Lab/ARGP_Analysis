@@ -10,7 +10,7 @@ from numpy import ndarray
 from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkeletonDataClass
 from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilDataHandler
 from pupil_labs_stuff.pupil_freemocap_synchronizer import PupilFreemocapSynchronizer
-from pupil_labs_stuff.qt_gl_laser_skeleton_visualizer import QtGlLaserSkeletonVisualizer
+from pupil_labs_stuff.qt_gl_laser_skeleton_visualizer_qualisys import QtGlLaserSkeletonVisualizerQualisys
 from pupil_labs_stuff.rotation_matrix_calculator_qualisys import RotationMatrixCalculator
 from pupil_labs_stuff.session_data_loader import SessionDataLoader
 from pupil_labs_stuff.vor_calibrator import VorCalibrator
@@ -183,10 +183,10 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
     def run_qualisys(self,
                      qualisys_timestamps_unix_npy: np.ndarray):
 
-        f = 1232
+        f = '`run_qualisys`'
 
         logger.info(
-            f"Creating the Laser Skeleton \\\0/ f is {f}"
+            f"Creating the Laser Skeleton \\o/ in {f}"
         )
 
         ####
@@ -268,23 +268,28 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         vor_frame_length = self.vor_frame_end - self.vor_frame_start
 
         print('WARNING: HARD CODING fixation point for VOR')
-        fixation_point_fr_xyz = np.array([438.0, 3026.6, 4.6])  # *vor_frame_length
+        fixation_point = np.array([438.0, 3026.6, 4.6])
+        fixation_point_fr_xyz = np.tile(fixation_point, (vor_frame_length, 1))
 
         # right eye
+        print('VOR Calibrating Right Eye')
         synchronized_session_data.right_gaze_vector_endpoint_fr_xyz = (
             vor_calibrator.calibrate(
+                synchronized_session_data.skeleton_data['right_eyeball_center_xyz'],
                 copy.deepcopy(synchronized_session_data.right_eye_pupil_labs_data),  # TODO Jon says that I don't need the rotation matrix for the eye, I can just use the head. I only need the xyz position of the eye.
                                                                                      # Figure out what I need to feed into the calibrator to get it to work with my data; see how `right_eye_socket_rotation_data` is used
-                copy.deepcopy(synchronized_session_data.right_eye_socket_rotation_data),
+                # copy.deepcopy(synchronized_session_data.right_eye_socket_rotation_data),
                 copy.deepcopy(synchronized_session_data.head_rotation_data),
                 fixation_point_fr_xyz,
             )
         )
         # left eye
+        print('VOR Calibrating Left Eye')
         synchronized_session_data.left_gaze_vector_endpoint_fr_xyz = (
             vor_calibrator.calibrate(
+                synchronized_session_data.skeleton_data['left_eyeball_center_xyz'],
                 synchronized_session_data.left_eye_pupil_labs_data,
-                synchronized_session_data.left_eye_socket_rotation_data,
+                # synchronized_session_data.left_eye_socket_rotation_data,
                 copy.deepcopy(synchronized_session_data.head_rotation_data),
                 fixation_point_fr_xyz,
             )
@@ -296,7 +301,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # Play laser skeleton animation (as both a cool thing and a debug tool)
         ####
 
-        qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizer(
+        qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizerQualisys(  # TODO I need to edit the skeleton visualizer to use the generic skelly dictionary
             session_data=synchronized_session_data,
             move_data_to_origin=True,
         )
@@ -305,7 +310,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         qt_gl_laser_skeleton.start_animation()
 
     def save_gaze_data(self, synchronized_session_data):
-        data_save_path = self.session_path / "DataArrays"
+        data_save_path = self.session_path / "data_arrays"
 
         # right eye
         save_right_eye_data_path = data_save_path / "right_eye_gaze_fr_xyz.npy"
