@@ -303,7 +303,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
 
         qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizerQualisys(  # TODO I need to edit the skeleton visualizer to use the generic skelly dictionary
             session_data=synchronized_session_data,
-            move_data_to_origin=True,
+            move_data_to_origin_bool=True,
         )
         # start_frame=self.vor_frame_start,
         # end_frame=self.vor_frame_end)

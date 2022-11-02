@@ -17,6 +17,19 @@ from pupil_labs_stuff.session_data_loader import SessionDataLoader
 logger = logging.getLogger(__name__)
 
 
+def skelly_dict_to_ndarray(skeleton_dict: dict):
+    number_of_joints = len(skeleton_dict)
+    number_of_frames = skeleton_dict['head_front_xyz'].shape[0]
+
+    skelly_ndarray_frame_joint_xyz = np.empty([number_of_frames, number_of_joints, 3])
+
+    for joint_number, value in enumerate(skeleton_dict.values()):
+        skelly_ndarray_frame_joint_xyz[:, joint_number, :] = value
+
+    print(f'created `skelly_ndarray_frame_joint_xyz` with shape: {skelly_ndarray_frame_joint_xyz.shape}')
+
+    return skelly_ndarray_frame_joint_xyz
+
 class QtGlLaserSkeletonVisualizerQualisys:
     session_path: Path = None
 
@@ -26,20 +39,22 @@ class QtGlLaserSkeletonVisualizerQualisys:
         skeleton_dict: np.ndarray = None,
         start_frame: int = None,
         end_frame: int = None,
-        move_data_to_origin: bool = True,
+        move_data_to_origin_bool: bool = True,
     ):
 
         if session_data is not None:
             self.session_data = session_data
-            self.skeleton_dict = session_data.skeleton_data
+            self.skeleton_frame_joint_xyz = session_data.skeleton_data
         elif skeleton_dict is not None:
-            self.skeleton_dict = skeleton_dict
+            self.skeleton_frame_joint_xyz = skeleton_dict
         else:
             raise ValueError(
                 "Must provide either session data or mediapipe skeleton data"
             )
+        
+        self.skeleton_frame_joint_xyz = skelly_dict_to_ndarray(self.skeleton_frame_joint_xyz)
 
-        if move_data_to_origin:
+        if move_data_to_origin_bool:
             self.move_data_to_origin()
 
         if start_frame is None:
@@ -58,9 +73,9 @@ class QtGlLaserSkeletonVisualizerQualisys:
         self.create_grid_planes()
         # self.get_mediapipe_connections()
         self.initialize_skel_dottos()
-        self.initialize_skel_lines()
+        #self.initialize_skel_lines()
         self.initialize_head_axes()
-        self.initialize_eye_socket_axes()
+        #self.initialize_eye_socket_axes()
         if self.session_data.right_gaze_vector_endpoint_fr_xyz is not None:
             self.initialize_gaze_lasers()
             self.initialize_gaze_laser_tails(tail_length=30)
@@ -109,7 +124,7 @@ class QtGlLaserSkeletonVisualizerQualisys:
 
     def initialize_skel_dottos(self):
         self.skeleton_scatter_item = gl.GLScatterPlotItem(
-            pos=self.skeleton_dict[self.current_frame_number, :, :],
+            pos=self.skeleton_frame_joint_xyz[self.current_frame_number, :, :],
             color=(0, 1, 1, 1),
             size=10,
             pxMode=False,
@@ -120,7 +135,7 @@ class QtGlLaserSkeletonVisualizerQualisys:
     #     self.skeleton_connections_list = []
     #     for this_connection in self.mediapipe_body_connections:
     #         this_skel_line = gl.GLLinePlotItem(
-    #             pos=self.skeleton_dict[
+    #             pos=self.skeleton_frame_joint_xyz[
     #                 self.current_frame_number, this_connection, :
     #             ]
     #         )
@@ -347,7 +362,7 @@ class QtGlLaserSkeletonVisualizerQualisys:
             print(f"frame number: {self.current_frame_number}")
 
         self.skeleton_scatter_item.setData(
-            pos=self.skeleton_dict[self.current_frame_number, :, :]
+            pos=self.skeleton_frame_joint_xyz[self.current_frame_number, :, :]
         )
         self.update_skeleton_lines()
         self.update_head_axis_lines()
@@ -361,7 +376,7 @@ class QtGlLaserSkeletonVisualizerQualisys:
     #         self.mediapipe_body_connections
     #     ):
     #         self.skeleton_connections_list[this_skeleton_line_number].setData(
-    #             pos=self.skeleton_dict[
+    #             pos=self.skeleton_frame_joint_xyz[
     #                 self.current_frame_number, this_connection, :
     #             ]
     #         )
@@ -543,12 +558,12 @@ class QtGlLaserSkeletonVisualizerQualisys:
     def move_data_to_origin(self):  # TODO translate the skeleton dictionary into an array for plotting/calculating, or
                                     # change the plotting/caluclating mechanisms to work with dictionaries
         mean_position_xyz = np.nanmedian(
-            np.nanmedian(self.skeleton_dict, axis=0), axis=0
+            np.nanmedian(self.skeleton_frame_joint_xyz, axis=0), axis=0
         )
 
-        self.skeleton_dict[:, :, 0] -= mean_position_xyz[0]
-        self.skeleton_dict[:, :, 1] -= mean_position_xyz[1]
-        self.skeleton_dict[:, :, 2] -= mean_position_xyz[2]
+        self.skeleton_frame_joint_xyz[:, :, 0] -= mean_position_xyz[0]
+        self.skeleton_frame_joint_xyz[:, :, 1] -= mean_position_xyz[1]
+        self.skeleton_frame_joint_xyz[:, :, 2] -= mean_position_xyz[2]
 
         self.session_data.head_rotation_data.local_origin_fr_xyz[
             :, 0
@@ -593,7 +608,7 @@ if __name__ == "__main__":
         move_to_origin=True
     )
     print(f"mediapipe_skel_fr_mar_xyz.shape: {mediapipe_skel_fr_mar_xyz_in.shape}")
-    qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizer(
+    qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizerQualisys(
         mediapipe_skel_fr_mar_xyz=mediapipe_skel_fr_mar_xyz_in,
     )
     qt_gl_laser_skeleton.start_animation()

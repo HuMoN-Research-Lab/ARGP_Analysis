@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     # VOR Frames
     vor_start = 2500
-    vor_end = 6000
+    vor_end = 5600
 
     qualisys_marker_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_markers
     qualisys_skeleton_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_skeleton

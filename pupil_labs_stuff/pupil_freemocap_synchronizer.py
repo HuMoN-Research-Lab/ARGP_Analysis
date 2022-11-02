@@ -111,9 +111,6 @@ class PupilFreemocapSynchronizer:
         assert self.synchronized_timestamps.shape[0] == self.right_eye_theta.shape[0]
         assert self.synchronized_timestamps.shape[0] == self.left_eye_theta.shape[0]
 
-        if debug:
-            self.show_debug_plots(vor_frame_start, vor_frame_end)
-
         synchronized_right_eye_data = PupilLabsDataClass(
             timestamps=self.synchronized_timestamps,
             theta=self.right_eye_theta,
@@ -144,6 +141,10 @@ class PupilFreemocapSynchronizer:
             right_eye_pupil_labs_data=synchronized_right_eye_data,
             left_eye_pupil_labs_data=synchronized_left_eye_data,
         )
+
+        if debug:
+            self.show_debug_plots(vor_frame_start, vor_frame_end, synchronized_session_data)
+
         return synchronized_session_data
 
     def clip_eye_data(self):
@@ -293,7 +294,7 @@ class PupilFreemocapSynchronizer:
             / np.linalg.norm(self.left_eye_pupil_center_normal_z)
         )
 
-    def show_debug_plots(self, vor_frame_start, vor_frame_end):
+    def show_debug_plots(self, vor_frame_start, vor_frame_end, synchronized_session_data):
 
         ###########################
         # Plot Raw Data
@@ -380,20 +381,20 @@ class PupilFreemocapSynchronizer:
         fig.suptitle("Synchronized data")
         ax1 = fig.add_subplot(411)
         ax1.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.right_eye_pupil_center_normal_x[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.right_eye_pupil_labs_data.pupil_center_normal_x[vor_frame_start:vor_frame_end],
             ".-",
             label="right_eye_pupil_center_normal_x",
         )
         ax1.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.right_eye_pupil_center_normal_y[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.right_eye_pupil_labs_data.pupil_center_normal_y[vor_frame_start:vor_frame_end],
             ".-",
             label="right_eye_pupil_center_normal_y",
         )
         ax1.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.right_eye_pupil_center_normal_z[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.right_eye_pupil_labs_data.pupil_center_normal_z[vor_frame_start:vor_frame_end],
             ".-",
             label="right_eye_pupil_center_normal_z",
         )
@@ -401,14 +402,14 @@ class PupilFreemocapSynchronizer:
 
         ax2 = fig.add_subplot(412)
         ax2.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.right_eye_theta[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.right_eye_pupil_labs_data.theta[vor_frame_start:vor_frame_end],
             ".-",
             label="right_eye_theta",
         )
         ax2.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.right_eye_phi[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.right_eye_pupil_labs_data.phi[vor_frame_start:vor_frame_end],
             ".-",
             label="right_eye_phi",
         )
@@ -416,20 +417,20 @@ class PupilFreemocapSynchronizer:
 
         ax3 = fig.add_subplot(413)
         ax3.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.left_eye_pupil_center_normal_x[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.left_eye_pupil_labs_data.pupil_center_normal_x[vor_frame_start:vor_frame_end],
             ".-",
             label="left_eye_pupil_center_normal_x",
         )
         ax3.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.left_eye_pupil_center_normal_y[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.left_eye_pupil_labs_data.pupil_center_normal_y[vor_frame_start:vor_frame_end],
             ".-",
             label="left_eye_pupil_center_normal_y",
         )
         ax3.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.left_eye_pupil_center_normal_z[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.left_eye_pupil_labs_data.pupil_center_normal_z[vor_frame_start:vor_frame_end],
             ".-",
             label="left_eye_pupil_center_normal_z",
         )
@@ -437,18 +438,54 @@ class PupilFreemocapSynchronizer:
 
         ax4 = fig.add_subplot(414)
         ax4.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.left_eye_theta[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.left_eye_pupil_labs_data.theta[vor_frame_start:vor_frame_end],
             ".-",
             label="left_eye_theta",
         )
         ax4.plot(
-            self.synchronized_timestamps[vor_frame_start:vor_frame_end],
-            self.left_eye_phi[vor_frame_start:vor_frame_end],
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.left_eye_pupil_labs_data.phi[vor_frame_start:vor_frame_end],
             ".-",
             label="left_eye_phi",
         )
         ax4.legend(loc="upper left")
+
+        ###########################
+        # Plot synchronized eye and head data - looking at VOR offset
+        ###########################
+
+        fig = plt.figure(num=236921, figsize=(10, 20))
+        fig.suptitle("Eye and Head data (for VOR eyeballing)")
+        ax1 = fig.add_subplot(211)
+        ax1.plot(
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            self.right_eye_pupil_center_normal_x[vor_frame_start:vor_frame_end],
+            ".-",
+            label="right_eye_pupil_center_normal_x",
+        )
+        ax1.plot(
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            self.right_eye_pupil_center_normal_y[vor_frame_start:vor_frame_end],
+            ".-",
+            label="right_eye_pupil_center_normal_y",
+        )
+        ax1.plot(
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            self.right_eye_pupil_center_normal_z[vor_frame_start:vor_frame_end],
+            ".-",
+            label="right_eye_pupil_center_normal_z",
+        )
+        ax1.legend(loc="upper right")
+
+        ax2 = fig.add_subplot(212)
+        ax2.plot(
+            synchronized_session_data.mocap_timestamps[vor_frame_start:vor_frame_end],
+            synchronized_session_data.skeleton_data['head_front_xyz'][vor_frame_start:vor_frame_end],
+            ".-",
+            label="head_front_xyz",
+        )
+        ax2.legend(loc="upper right")
 
         plt.show()
 
