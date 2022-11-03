@@ -301,7 +301,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # Play laser skeleton animation (as both a cool thing and a debug tool)
         ####
 
-        qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizerQualisys(  # TODO I need to edit the skeleton visualizer to use the generic skelly dictionary
+        qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizerQualisys( 
             session_data=synchronized_session_data,
             move_data_to_origin_bool=True,
         )

@@ -489,4 +489,3 @@ class PupilFreemocapSynchronizer:
 
         plt.show()
 
-        f = 101
