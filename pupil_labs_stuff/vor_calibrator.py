@@ -43,7 +43,6 @@ class VorCalibrator:
         self,
         eye_socket_origin_fr_xyz: ndarray,  # TDW added
         pupil_labs_eye_data: PupilLabsDataClass,
-        # eye_socket_rotation_data: RotationDataClass,
         head_rotation_data: RotationDataClass,
         fixation_point_fr_xyz: np.ndarray,
     ) -> np.ndarray:
@@ -53,14 +52,11 @@ class VorCalibrator:
                 "fixation_point_fr_xyz must be a numpy array with 3 columns"
             )
 
-        # eye_socket_origin_fr_xyz = eye_socket_rotation_data.local_origin_fr_xyz
-        # eye_socket_rotation_matrices = eye_socket_rotation_data.rotation_matrices
 
         eye_socket_rotation_matrices = head_rotation_data.rotation_matrices  # just using the head for the eye...
 
         head_rotation_matrices = head_rotation_data.rotation_matrices
 
-        # gaze_unit_vector_end_point_fr_xyz = eye_socket_rotation_data.z_hat_norm_fr_xyz
         self.fixation_distance = self.get_distance_between_two_points(
             fixation_point_fr_xyz,
             eye_socket_origin_fr_xyz[self.vor_start_frame: self.vor_end_frame, :],

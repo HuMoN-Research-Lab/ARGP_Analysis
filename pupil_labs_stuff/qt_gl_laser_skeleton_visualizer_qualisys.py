@@ -112,17 +112,6 @@ class QtGlLaserSkeletonVisualizerQualisys:
         grid_plane_z.translate(0, 0, -grid_scale)
         self.gl_view_widget.addItem(grid_plane_z)
 
-    # def get_mediapipe_connections(self):
-    #     self.mediapipe_body_connections = [
-    #         this_connection for this_connection in mp_holistic.POSE_CONNECTIONS
-    #     ]
-    #     self.mediapipe_hand_connections = [
-    #         this_connection for this_connection in mp_holistic.HAND_CONNECTIONS
-    #     ]
-    #     self.mediapipe_face_connections = [
-    #         this_connection for this_connection in mp_holistic.FACEMESH_TESSELATION
-    #     ]
-
     def initialize_skel_dottos(self):
         self.skeleton_scatter_item = gl.GLScatterPlotItem(
             pos=self.skeleton_frame_joint_xyz[self.current_frame_number, :, :],
@@ -132,22 +121,10 @@ class QtGlLaserSkeletonVisualizerQualisys:
         )
         self.gl_view_widget.addItem(self.skeleton_scatter_item)
 
-    # def initialize_skel_lines(self):
-    #     self.skeleton_connections_list = []
-    #     for this_connection in self.mediapipe_body_connections:
-    #         this_skel_line = gl.GLLinePlotItem(
-    #             pos=self.skeleton_frame_joint_xyz[
-    #                 self.current_frame_number, this_connection, :
-    #             ]
-    #         )
-    #         self.skeleton_connections_list.append(this_skel_line)
-    #         self.gl_view_widget.addItem(this_skel_line)
 
     def initialize_gaze_lasers(self):
         # right eye
         this_frame_right_gaze_origin = (
-            # self.session_data.right_eye_socket_rotation_data.local_origin_fr_xyz[0, :]
-            # self.session_data.skeleton_data['right_eyeball_center_xyz'][0, :]
             self.skeleton_frame_joint_xyz[0, 25, :]  # 25 is the right eye joint; re: dictionary
         )
         this_frame_right_gaze_endpoint = (
@@ -165,8 +142,6 @@ class QtGlLaserSkeletonVisualizerQualisys:
 
         # left eye
         this_frame_left_gaze_origin = (
-            # self.session_data.left_eye_socket_rotation_data.local_origin_fr_xyz[0, :]
-            # self.session_data.skeleton_data['left_eyeball_center_xyz'][0, :]
             self.skeleton_frame_joint_xyz[0, 24, :]  # 24 is the left eye joint
         )
         this_frame_left_gaze_endpoint = (
@@ -376,15 +351,6 @@ class QtGlLaserSkeletonVisualizerQualisys:
             self.update_gaze_lasers()
             self.update_gaze_laser_tails()
 
-    # def update_skeleton_lines(self):
-    #     for this_skeleton_line_number, this_connection in enumerate(
-    #         self.mediapipe_body_connections
-    #     ):
-    #         self.skeleton_connections_list[this_skeleton_line_number].setData(
-    #             pos=self.skeleton_frame_joint_xyz[
-    #                 self.current_frame_number, this_connection, :
-    #             ]
-    #         )
 
     def update_head_axis_lines(self):
         # X
@@ -570,8 +536,9 @@ class QtGlLaserSkeletonVisualizerQualisys:
         timer.start(33)
         self.start()
 
-    def move_data_to_origin(self):  # TODO translate the skeleton dictionary into an array for plotting/calculating, or
+    def move_data_to_origin(self):
         # change the plotting/caluclating mechanisms to work with dictionaries
+
         mean_position_xyz = np.nanmedian(
             np.nanmedian(self.skeleton_frame_joint_xyz, axis=0), axis=0
         )
@@ -611,19 +578,20 @@ class QtGlLaserSkeletonVisualizerQualisys:
             :, 2
             ] -= mean_position_xyz[2]
 
+# The code below won't work anymore because I've hacked this repo to work for qualisys data
 
-if __name__ == "__main__":
-    # session_id = 'sesh_2022-02-15_11_54_28_pupil_maybe'
-    session_id = "sesh_2022-05-03_13_43_00_JSM_treadmill_day2_t0"
-    data_path = Path("C:/Users/jonma/Dropbox/FreeMoCapProject/FreeMocap_Data/")
-    session_path = data_path / session_id
-
-    session_data_loader = SessionDataLoader(session_path)
-    mediapipe_skel_fr_mar_xyz_in = session_data_loader.load_mediapipe_data(
-        move_to_origin=True
-    )
-    print(f"mediapipe_skel_fr_mar_xyz.shape: {mediapipe_skel_fr_mar_xyz_in.shape}")
-    qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizerQualisys(
-        mediapipe_skel_fr_mar_xyz=mediapipe_skel_fr_mar_xyz_in,
-    )
-    qt_gl_laser_skeleton.start_animation()
+# if __name__ == "__main__":
+#     # session_id = 'sesh_2022-02-15_11_54_28_pupil_maybe'
+#     session_id = "sesh_2022-05-03_13_43_00_JSM_treadmill_day2_t0"
+#     data_path = Path("C:/Users/jonma/Dropbox/FreeMoCapProject/FreeMocap_Data/")
+#     session_path = data_path / session_id
+#
+#     session_data_loader = SessionDataLoader(session_path)
+#     mediapipe_skel_fr_mar_xyz_in = session_data_loader.load_mediapipe_data(
+#         move_to_origin=True
+#     )
+#     print(f"mediapipe_skel_fr_mar_xyz.shape: {mediapipe_skel_fr_mar_xyz_in.shape}")
+#     qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizerQualisys(
+#         mediapipe_skel_fr_mar_xyz=mediapipe_skel_fr_mar_xyz_in,
+#     )
+#     qt_gl_laser_skeleton.start_animation()

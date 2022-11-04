@@ -14,7 +14,8 @@ def create_laser_skeleton(session_path: Path,
                           pupil_json_path: Path,
                           vor_start: int,
                           vor_end: int,
-                          qualisys_timestamps_unix_npy: np.ndarray) -> dict:
+                          qualisys_timestamps_unix_npy: np.ndarray,
+                          debug: bool) -> dict:
 
     # We want a sychronized & aligned laser skeleton at the end of this
 
@@ -26,7 +27,7 @@ def create_laser_skeleton(session_path: Path,
             pupil_json_path=pupil_json_path,
             vor_frame_start=vor_start,
             vor_frame_end=vor_end,
-            debug=True
+            debug=debug
         )
     )
 

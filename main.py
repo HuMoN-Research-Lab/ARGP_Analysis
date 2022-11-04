@@ -31,6 +31,9 @@ if __name__ == "__main__":
     vor_start = 2500
     vor_end = 5600
 
+    # SET DEBUG HERE
+    debug = False
+
     qualisys_marker_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_markers
     qualisys_skeleton_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_skeleton
     pupil_data_path = base_data_path / subject_id / pupil_file_path / pupil_file_name
@@ -51,7 +54,9 @@ if __name__ == "__main__":
 
     head_rotation_data = calculate_rotation_matrix_from_qualisys_data(generic_skelly_dict)
 
-    debug_skelly_plotter(generic_skelly_dict, select_frame=np.array([3000]))
+    if debug:
+
+        debug_skelly_plotter(generic_skelly_dict, select_frame=np.array([3000]))
 
     create_laser_skeleton(session_path=base_data_path / subject_id,
                           generic_skelly_dict=generic_skelly_dict,
@@ -59,6 +64,7 @@ if __name__ == "__main__":
                           pupil_json_path=pupil_json_path,
                           vor_start=vor_start,
                           vor_end=vor_end,
-                          qualisys_timestamps_unix_npy=qualisys_timestamps_unix_npy)
+                          qualisys_timestamps_unix_npy=qualisys_timestamps_unix_npy,
+                          debug=debug)
 
     f = 'debug_stop'
