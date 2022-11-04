@@ -32,10 +32,9 @@ if __name__ == "__main__":
     vor_end = 5600
 
     # SET DEBUG HERE
-    debug = False
+    debug = True
 
     qualisys_marker_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_markers
-    qualisys_skeleton_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_skeleton
     pupil_data_path = base_data_path / subject_id / pupil_file_path / pupil_file_name
     pupil_json_path = base_data_path / subject_id / pupil_json_file_path_name
 

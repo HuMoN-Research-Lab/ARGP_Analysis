@@ -7,7 +7,9 @@ Repo for the post-processing and analysis of Pupil, Qualisys, and Unity data tha
   - this might be handled by pycharm?
 - and (in case it wasn't obvious), clone this repository and assign the python 3.9 environment as your interpreter
 
+
 ## Demo Data
+> Warning: the demo *should* work but it hasn't been tested since early October 2022
 - follow [this URL](https://drive.google.com/drive/folders/1dic0dFkEQCN648a0imlMrh2oLi4s2bnb?usp=sharing) to download a zip file containing all the demo files that you'll need
 - this contains three files:
   1. `2022-08-29_Pilot_Data0002.tsv` <- qualisys data as a `.tsv` file
