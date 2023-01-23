@@ -9,12 +9,16 @@ import pandas
 
 def qualisys_json_creator(subject_qualisys_json_path: Path,
                           qualisys_df: pandas.core.frame.DataFrame) -> Dict:
-    if exists(subject_qualisys_json_path):  # check and see if I've run this code before/ created the dictionary
+    print("Check and see if I've run this code before/ created the dictionary")
+
+    if exists(subject_qualisys_json_path):
+        print(f"JSON exists! Loaded from -> {str(subject_qualisys_json_path)}")
 
         qualisys_json_to_load = open(str(subject_qualisys_json_path))
         qualisys_dict = json.load(qualisys_json_to_load)
 
     else:  # if the file doesn't exist, create it!
+        print("Creating the JSON \\O/")
 
         qualisys_dict = qualisys_df.to_dict()
 
@@ -22,5 +26,7 @@ def qualisys_json_creator(subject_qualisys_json_path: Path,
 
             qualisys_json = json.dumps(qualisys_dict)
             output_file.write(qualisys_json)
+
+        print(f"JSON Created -> {str(subject_qualisys_json_path)}")
 
     return qualisys_dict
