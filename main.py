@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     # move lines 12-20 to a function or separate functions
-    base_data_path = Path('D:\\data_storage\\argp_data')
-    subject_id = '2022_08_29_Pilot_Data0002'
+    base_data_path = Path('trentonwirth@Trentons-Air\\Users\\trentonwirth\\ARGP_Data')
+    subject_id = '2023-02-08-Demo-MDN'
     logging.info(f'Loading data for subject: {subject_id}')
 
     qualisys_file_path = Path('qualisys')

@@ -8,7 +8,7 @@ import pyqtgraph.opengl as gl
 import pyqtgraph as pg
 import numpy as np
 import sys
-from mediapipe.python.solutions import holistic as mp_holistic
+#from mediapipe.python.solutions import holistic as mp_holistic
 
 from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkeletonDataClass
 from pupil_labs_stuff.data_classes.rotation_data_class import RotationDataClass

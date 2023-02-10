@@ -156,4 +156,4 @@ octave-workspace
 
 .idea
 *.json
-
+.DS_Store
