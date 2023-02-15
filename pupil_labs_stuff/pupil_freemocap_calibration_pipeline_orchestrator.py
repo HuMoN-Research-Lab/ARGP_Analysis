@@ -129,7 +129,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         vor_frame_length = self.vor_frame_end - self.vor_frame_start
 
         print('WARNING: HARD CODING fixation point for VOR')
-        fixation_point = np.array([438.0, 3026.6, 4.6])
+        fixation_point = np.array([438.0, 3026.6, 4.6]) #TODO get calibration frame from Michael
         fixation_point_fr_xyz = np.tile(fixation_point, (vor_frame_length, 1))
 
         # right eye

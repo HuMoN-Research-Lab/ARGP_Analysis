@@ -15,21 +15,21 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     # move lines 12-20 to a function or separate functions
-    base_data_path = Path('trentonwirth@Trentons-Air\\Users\\trentonwirth\\ARGP_Data')
+    base_data_path = Path('/Users/trentonwirth/ARGP_Data')
     subject_id = '2023-02-08-Demo-MDN'
     logging.info(f'Loading data for subject: {subject_id}')
 
     qualisys_file_path = Path('qualisys')
-    pupil_file_path = Path('pupil\\2022_08_29\\002\\exports\\000')  # use pathlib more robustly instead of strings
-    pupil_json_file_path_name = Path('pupil\\2022_08_29\\002\\info.player.json')
+    pupil_file_path = Path('pupil/000')  # use pathlib more robustly instead of strings
+    pupil_json_file_path_name = Path('pupil/info.player.json')
 
-    qualisys_file_name_markers = '2022-08-29_Pilot_Data0002.tsv'
-    qualisys_file_name_skeleton = '2022-08-29_Pilot_Data0002_s_TDW.tsv'
+    qualisys_file_name_markers = 'mike_pilot_2023-02-08_003_processed.tsv'
+    qualisys_file_name_skeleton = 'mike_pilot_2023-02-08_003_processed_s_MDN.tsv'
     pupil_file_name = 'pupil_positions.csv'
 
     # VOR Frames
-    vor_start = 2500
-    vor_end = 5600
+    vor_start = 5500
+    vor_end = 9000
 
     # SET DEBUG HERE
     debug = True

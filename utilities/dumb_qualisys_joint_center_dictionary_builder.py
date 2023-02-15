@@ -40,20 +40,24 @@ qualisys_joint_center_dict = {
         },
 
         "left_shoulder_xyz": {
-                "LShoulderFront": 0.5,
-                "LShoulderBack": 0.5
+                "LShoulderTop": 1
+                # "LShoulderFront": 0.5,
+                # "LShoulderBack": 0.5
         },
 
         "right_shoulder_xyz": {
-                "RShoulderFront": 0.5,
-                "RShoulderBack": 0.5
+                "RShoulderTop": 1
+                # "RShoulderFront": 0.5,
+                # "RShoulderBack": 0.5
         },
 
         "cspine_xyz": {
-            "RShoulderBack": 0.25,
-            "LShoulderBack": 0.25,
-            "RShoulderFront": 0.25,
-            "LShoulderFront": 0.25
+                "LShoulderTop": 0.5,
+                "RShoulderTop": 0.5
+                # "RShoulderBack": 0.25,
+                # "LShoulderBack": 0.25,
+                # "RShoulderFront": 0.25,
+                # "LShoulderFront": 0.25
         },
 
         "left_elbow_xyz": {

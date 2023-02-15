@@ -19,7 +19,7 @@ def debug_skelly_plotter(generic_skelly_dict: dict,
     temp_x = numpy.zeros(1)
     temp_y = numpy.zeros(1)
     temp_z = numpy.zeros(1)
-
+    
     for key in generic_skelly_dict:
         temp_joint_xyz = generic_skelly_dict[key]
 
