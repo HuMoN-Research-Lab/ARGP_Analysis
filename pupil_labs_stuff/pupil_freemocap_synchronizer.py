@@ -223,7 +223,7 @@ class PupilFreemocapSynchronizer:
         right_eye_timestamps = self.right_eye_timestamps_clipped
         left_eye_timestamps = self.left_eye_timestamps_clipped
 
-        self.right_eye_pupil_center_normal_x = np.interp(
+        self.right_eye_pupil_center_normal_x = np.interp( # this is the problem! leaving a note for when I tackle it with Jon
             freemocap_timestamps,
             right_eye_timestamps,
             self.right_eye_pupil_center_normal_x_clipped,

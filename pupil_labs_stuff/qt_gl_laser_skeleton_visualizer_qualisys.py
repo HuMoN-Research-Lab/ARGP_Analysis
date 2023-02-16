@@ -520,7 +520,7 @@ class QtGlLaserSkeletonVisualizerQualisys:
         self.left_gaze_laser_tail_line_item.setData(pos=this_left_gaze_laser_tail)
 
     def update_frame_number(self):
-        self.current_frame_number += 1
+        self.current_frame_number += 10
         if self.current_frame_number >= self.end_frame_number:
             self.current_frame_number = self.start_frame_number
 
