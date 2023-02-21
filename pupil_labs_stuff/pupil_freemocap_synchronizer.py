@@ -225,7 +225,7 @@ class PupilFreemocapSynchronizer:
 
         self.right_eye_pupil_center_normal_x = np.interp(
             mocap_timestamps - mocap_timestamps[0],  # there is a problem upstream with the timestamps; at this point they should be overlapping and start at the same time
-            right_eye_timestamps - right_eye_timestamps[0],
+            right_eye_timestamps - right_eye_timestamps[0],  # create debug plot that plots the frames on top of each other, make sure they start at the same place
             self.right_eye_pupil_center_normal_x_clipped,
         )
         self.right_eye_pupil_center_normal_y = np.interp(
