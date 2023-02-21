@@ -31,9 +31,7 @@ class PupilFreemocapSynchronizer:
         """
         # find start and end frames shared by all datastreams
         mocap_timestamps = self.raw_session_data.mocap_timestamps
-        right_eye_timestamps = (
-            self.raw_session_data.right_eye_pupil_labs_data.timestamps
-        )
+        right_eye_timestamps = self.raw_session_data.right_eye_pupil_labs_data.timestamps
         left_eye_timestamps = self.raw_session_data.left_eye_pupil_labs_data.timestamps
 
         start_time_unix = np.max(
@@ -223,10 +221,10 @@ class PupilFreemocapSynchronizer:
         right_eye_timestamps = self.right_eye_timestamps_clipped
         left_eye_timestamps = self.left_eye_timestamps_clipped
 
-        self.right_eye_pupil_center_normal_x = np.interp(
+        self.right_eye_pupil_center_normal_x = np.interp( # TODO make a debug plot, fix the synchronization/timestamps bug
             mocap_timestamps - mocap_timestamps[0],  # there is a problem upstream with the timestamps; at this point they should be overlapping and start at the same time
             right_eye_timestamps - right_eye_timestamps[0],  # create debug plot that plots the frames on top of each other, make sure they start at the same place
-            self.right_eye_pupil_center_normal_x_clipped,
+            self.right_eye_pupil_center_normal_x_clipped,  # save the debug plot as a class, create a method that makes a subplot
         )
         self.right_eye_pupil_center_normal_y = np.interp(
             mocap_timestamps,

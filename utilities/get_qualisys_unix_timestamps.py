@@ -6,12 +6,12 @@ import pandas as pd
 
 def get_qualisys_unix_timestamps(qualisys_df: pd.DataFrame,
                                  qualisys_data_path: Path) -> np.ndarray:
-
-    qualisys_start_time_string = pd.read_csv(filepath_or_buffer=str(qualisys_data_path), delimiter='\t', skiprows=7, nrows=1, header=None)[1][0]
+    qualisys_start_time_string = \
+        pd.read_csv(filepath_or_buffer=str(qualisys_data_path), delimiter='\t', skiprows=7, nrows=1, header=None)[1][0]
 
     qualisys_start_time_unix_local_time = pd.Timestamp(qualisys_start_time_string.replace(",", "")).timestamp()
 
-    time_zone_offset_in_seconds = 4*60*60
+    time_zone_offset_in_seconds = 4 * 60 * 60
 
     print('WARNING: pupil-qualisys temporal offset is hard-coded.')
     seconds_added_to_qualisys_timestamps_to_align_with_pupil = 4  # TODO Figure out the hard coded offset for this dataset.
