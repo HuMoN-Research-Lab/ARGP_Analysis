@@ -3,8 +3,7 @@ from numpy import ndarray
 
 from sklearn.preprocessing import normalize
 
-from pupil_labs_stuff.rotation_matrix_calculator_qualisys import RotationMatrixCalculator
-from utilities.debug_plot_eyeball_centers_at_origin import debug_plot_eyeball_centers_at_origin
+from utilities.DebugTools import DebugTools
 
 
 def calculate_eyeball_centers(skelly_dict: dict,
@@ -45,17 +44,16 @@ def calculate_eyeball_centers(skelly_dict: dict,
     left_eyeball_center_xyz = zeroed_left_eyeball_center_xyz + head_center_xyz
     right_eyeball_center_xyz = zeroed_right_eyeball_center_xyz + head_center_xyz
 
-    if debug:
-        debug_plot_eyeball_centers_at_origin(this_frame=np.array([3000]),
-                                             head_x_hat=head_x_hat,
-                                             head_y_hat=head_y_hat,
-                                             head_z_hat=head_z_hat,
-                                             zeroed_head_front_to_origin=zeroed_head_front_to_origin,
-                                             zeroed_head_left_to_origin=zeroed_head_left_to_origin,
-                                             zeroed_head_right_to_origin=zeroed_head_right_to_origin,
-                                             zeroed_head_top_to_origin=zeroed_head_top_to_origin,
-                                             zeroed_left_eyeball_center_xyz=zeroed_left_eyeball_center_xyz,
-                                             zeroed_right_eyeball_center_xyz=zeroed_right_eyeball_center_xyz)
+    debug_plot = DebugTools(debug_bool=debug)
+    debug_plot.plot_eyeball_centers_at_origin(this_frame=np.array([3000]),
+                                              head_x_hat=head_x_hat,
+                                              head_y_hat=head_y_hat,
+                                              head_z_hat=head_z_hat,
+                                              zeroed_head_front_to_origin=zeroed_head_front_to_origin,
+                                              zeroed_head_left_to_origin=zeroed_head_left_to_origin,
+                                              zeroed_head_right_to_origin=zeroed_head_right_to_origin,
+                                              zeroed_head_top_to_origin=zeroed_head_top_to_origin,
+                                              zeroed_left_eyeball_center_xyz=zeroed_left_eyeball_center_xyz,
+                                              zeroed_right_eyeball_center_xyz=zeroed_right_eyeball_center_xyz)
 
     return {"left_eyeball_center_xyz": left_eyeball_center_xyz, "right_eyeball_center_xyz": right_eyeball_center_xyz}
-
