@@ -6,6 +6,7 @@ import matplotlib
 
 from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkeletonDataClass
 from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilLabsDataClass
+from utilities.DebugTools import DebugTools
 
 matplotlib.use("qt5agg")
 logger = logging.getLogger(__name__)
@@ -19,6 +20,7 @@ class PupilFreemocapSynchronizer:
     def __init__(self, raw_session_data: LaserSkeletonDataClass):
         self.raw_session_data = raw_session_data
         self.synchronized_session_data: LaserSkeletonDataClass = None
+        self.debug_bool = False
 
     def synchronize(
         self,
@@ -99,7 +101,7 @@ class PupilFreemocapSynchronizer:
         )
 
         self.clip_eye_data()
-        self.resample_eye_data()
+        self.resample_eye_data(debug_bool=debug)
         # self.normalize_eye_data()
 
         self.synchronized_timestamps = (
@@ -216,16 +218,25 @@ class PupilFreemocapSynchronizer:
             self.left_eye_start_frame : self.left_eye_end_frame
         ]
 
-    def resample_eye_data(self):
+    def resample_eye_data(self,
+                          debug_bool: bool):
         mocap_timestamps = self.synchronized_timestamps
         right_eye_timestamps = self.right_eye_timestamps_clipped
         left_eye_timestamps = self.left_eye_timestamps_clipped
 
-        self.right_eye_pupil_center_normal_x = np.interp( # TODO make a debug plot, fix the synchronization/timestamps bug
-            mocap_timestamps - mocap_timestamps[0],  # there is a problem upstream with the timestamps; at this point they should be overlapping and start at the same time
-            right_eye_timestamps - right_eye_timestamps[0],  # create debug plot that plots the frames on top of each other, make sure they start at the same place
-            self.right_eye_pupil_center_normal_x_clipped,  # save the debug plot as a class, create a method that makes a subplot
+        self.right_eye_pupil_center_normal_x = np.interp(
+            mocap_timestamps,
+            right_eye_timestamps,
+            self.right_eye_pupil_center_normal_x_clipped,
         )
+
+        debug_pupil_center_normal_x = DebugTools(debug_bool=debug_bool)
+        debug_pupil_center_normal_x.plot_interpolation(mocap_timestamps=mocap_timestamps,
+                                                       pupil_timestamps=right_eye_timestamps,
+                                                       pupil_data_input=self.right_eye_pupil_center_normal_x_clipped,
+                                                       pupil_data_interpolated=self.right_eye_pupil_center_normal_x
+                                                       )
+
         self.right_eye_pupil_center_normal_y = np.interp(
             mocap_timestamps,
             right_eye_timestamps,

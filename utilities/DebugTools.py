@@ -142,21 +142,44 @@ class DebugTools:
 
             plt.show()
 
-    def plot_interpolated_data_and_timestamps(self,
-                                              mocap_timestamps: ndarray,
-                                              pupil_timestamps: ndarray,
-                                              pupil_data_input: ndarray,
-                                              pupil_data_interpolated: ndarray):
+    def plot_interpolation(self,
+                           mocap_timestamps: ndarray,
+                           pupil_timestamps: ndarray,
+                           pupil_data_input: ndarray,
+                           pupil_data_interpolated: ndarray):
 
-        pass
+        if self.debug_bool is True:
 
-        # if self.debug_bool is True:
-        #
-        #     sns.set(style="darkgrid")
-        #
-        #     matplotlib.use("qt5agg")
-        #     plt.ion()  # stands for "interactive mode on"
-        #     fig = plt.figure()
-        #     ax = fig.add_subplot(211)
+            sns.set(style="darkgrid")
+
+            fig, ax = plt.subplots(3, 1, figsize=(8, 8))
+
+            sns.lineplot(x=np.arange(len(mocap_timestamps)), y=mocap_timestamps, ax=ax[0], color='green', markers=True,
+                         label='mocap_timestamps')
+            sns.lineplot(x=np.arange(len(pupil_timestamps)), y=pupil_timestamps, ax=ax[0], color='blue', markers=True,
+                         label='pupil_timestamps')
+
+            ax[0].set_xlabel('index')
+            ax[0].set_ylabel('timestamp')
+            ax[0].set_title('Raw Timestamps')
+
+            ax[0].legend(loc='upper right', fontsize='small', frameon=True, facecolor='white')
+
+            sns.lineplot(x=pupil_timestamps, y=pupil_data_input, ax=ax[1], color='green', markers=True)
+
+            ax[1].set_xlabel('pupil_timestamps')
+            ax[1].set_ylabel('pupil_data_input')
+            ax[1].set_title('Pre-Interpolated Pupil Data')
+
+            sns.lineplot(x=mocap_timestamps, y=pupil_data_interpolated, ax=ax[2], color='green', markers=True)
+
+            ax[2].set_xlabel('mocap_timestamps')
+            ax[2].set_ylabel('interpolated_pupil_data')
+            ax[2].set_title('Interpolated Pupil Data')
+
+            plt.subplots_adjust(hspace=0.6)
+
+            plt.show()
+
 
 
