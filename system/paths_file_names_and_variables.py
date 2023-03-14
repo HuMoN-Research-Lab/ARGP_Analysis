@@ -1,24 +1,28 @@
-
+from pathlib import Path
 
 # SET DEBUG HERE
-debug = True
+DEBUG = True
 
 # VOR Frame Range
-vor_start = 5500
-vor_end = 9000
+VOR_START = 5500
+VOR_END = 9000
 
 # ID and Filenames
-subject_id = '2023-02-08-Demo-MDN'
-qualisys_file_name_markers = 'mike_pilot_2023-02-08_003_processed_fullsession.tsv'
-qualisys_file_name_skeleton = 'mike_pilot_2023-02-08_003_processed_fullsession_s_MDN.tsv'
-pupil_file_name = 'pupil_positions.csv'
+SUBJECT_ID = '2023-02-08-Demo-MDN'
+QUALISYS_FILE_NAME_MARKERS = 'mike_pilot_2023-02-08_003_processed_fullsession.tsv'
+QUALISYS_FILE_NAME_SKELETON = 'mike_pilot_2023-02-08_003_processed_fullsession_s_MDN.tsv'
+PUPIL_FILE_NAME = 'pupil_positions.csv'
 
 # Paths
-base_data_path = Path('/Users/trentonwirth/ARGP_Data')
-qualisys_file_path = Path('qualisys')
-pupil_file_path = Path('pupil/000')  # use pathlib more robustly instead of strings
-pupil_json_file_path_name = Path('pupil/info.player.json')
+BASE_DATA_PATH = Path('/Users/trentonwirth/ARGP_Data')
+SUBJECT_JSON_PATH = BASE_DATA_PATH / SUBJECT_ID / 'processing_jsons'
+QUALISYS_FILE_PATH = Path('qualisys')
+PUPIL_FILE_PATH = Path('pupil/000')  # use pathlib more robustly instead of strings
+PUPIL_JSON_FILE_NAME = Path('pupil/info.player.json')
+SESSION_PATH = BASE_DATA_PATH / SUBJECT_ID
 
-qualisys_marker_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_markers
-pupil_data_path = base_data_path / subject_id / pupil_file_path / pupil_file_name
-pupil_json_path = base_data_path / subject_id / pupil_json_file_path_name
+QUALISYS_MARKER_DATA_PATH = BASE_DATA_PATH / SUBJECT_ID / QUALISYS_FILE_PATH / QUALISYS_FILE_NAME_MARKERS
+PUPIL_DATA_PATH = BASE_DATA_PATH / SUBJECT_ID / PUPIL_FILE_PATH / PUPIL_FILE_NAME
+PUPIL_JSON_PATH = BASE_DATA_PATH / SUBJECT_ID / PUPIL_JSON_FILE_NAME
+SUBJECT_QUALISYS_JSON_PATH = SUBJECT_JSON_PATH / 'qualisys_dict.json'
+
