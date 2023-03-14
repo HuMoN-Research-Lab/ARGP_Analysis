@@ -4,6 +4,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from system.paths_file_names_and_variables import debug, subject_id, qualisys_marker_data_path, pupil_data_path, \
+    base_data_path, pupil_json_path, vor_start, vor_end
 from utilities.DebugTools import DebugTools
 from utilities.create_generic_skeleton_from_qualisys_data import create_generic_skeleton_from_qualisys_data
 from utilities.create_laser_skeleton import create_laser_skeleton
@@ -14,29 +16,8 @@ logger = logging.getLogger(__name__)
 # logger.setLevel(INFO)
 
 if __name__ == "__main__":
-    # move lines 12-20 to a function or separate functions
-    base_data_path = Path('/Users/trentonwirth/ARGP_Data')
-    subject_id = '2023-02-08-Demo-MDN'
+
     logging.info(f'Loading data for subject: {subject_id}')
-
-    qualisys_file_path = Path('qualisys')
-    pupil_file_path = Path('pupil/000')  # use pathlib more robustly instead of strings
-    pupil_json_file_path_name = Path('pupil/info.player.json')
-
-    qualisys_file_name_markers = 'mike_pilot_2023-02-08_003_processed_fullsession.tsv'
-    qualisys_file_name_skeleton = 'mike_pilot_2023-02-08_003_processed_fullsession_s_MDN.tsv'
-    pupil_file_name = 'pupil_positions.csv'
-
-    # VOR Frames
-    vor_start = 5500
-    vor_end = 9000
-
-    # SET DEBUG HERE
-    debug = True
-
-    qualisys_marker_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_markers
-    pupil_data_path = base_data_path / subject_id / pupil_file_path / pupil_file_name
-    pupil_json_path = base_data_path / subject_id / pupil_json_file_path_name
 
     qualisys_df = pd.read_csv(filepath_or_buffer=str(qualisys_marker_data_path), delimiter='\t', header=11)
     pupil_df = pd.read_csv(filepath_or_buffer=str(pupil_data_path), delimiter=',', header=0)
