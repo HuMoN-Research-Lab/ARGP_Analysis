@@ -172,17 +172,27 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
             qt_gl_laser_skeleton.start_animation()
 
     def save_gaze_data(self, synchronized_session_data):
-        data_save_path = self.session_path / "data_arrays"
+        data_arrays_directory_path = self.session_path / "data_arrays"
+        try:
+            Path(self.session_path/"data_arrays").mkdir(parents=True, exist_ok=False)
+            logger.info(
+                f"Creating save_gaze_data path: {data_arrays_directory_path}"
+            )
+        except FileExistsError:
+            logger.info(
+                f"Path for save_gaze_data already exists: {data_arrays_directory_path}"
+            )
+            pass
 
         # right eye
-        save_right_eye_data_path = data_save_path / "right_eye_gaze_fr_xyz.npy"
+        save_right_eye_data_path = data_arrays_directory_path / "right_eye_gaze_fr_xyz.npy"
         np.save(
             save_right_eye_data_path,
             synchronized_session_data.right_gaze_vector_endpoint_fr_xyz,
         )
 
         # left eye
-        save_left_eye_data_path = data_save_path / "left_eye_gaze_fr_xyz.npy"
+        save_left_eye_data_path = data_arrays_directory_path / "left_eye_gaze_fr_xyz.npy"
         np.save(
             save_left_eye_data_path,
             synchronized_session_data.left_gaze_vector_endpoint_fr_xyz,

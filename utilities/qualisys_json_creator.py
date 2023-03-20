@@ -21,6 +21,7 @@ def qualisys_json_creator(subject_qualisys_json_path: Path,
         print("Creating the JSON \\O/")
 
         qualisys_dict = qualisys_df.to_dict()
+        Path(subject_qualisys_json_path.parents[0]).mkdir(parents=True, exist_ok=False)
 
         with open(str(subject_qualisys_json_path), 'w') as output_file:  # stuff it into the data storage folder
 
