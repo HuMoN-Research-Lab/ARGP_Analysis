@@ -15,17 +15,18 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     # move lines 12-20 to a function or separate functions
-    base_data_path = Path('D:\\data_storage\\argp_data')
-    subject_id = '2022_08_29_Pilot_Data0002'
+    base_data_path = Path('C:\\Users\\miken\\DATA\\ARGP\\SAMPLE_ARGP_DATA')
+    subject_id = '2022-08-29_Pilot_Data0002'
     logging.info(f'Loading data for subject: {subject_id}')
 
     qualisys_file_path = Path('qualisys')
-    pupil_file_path = Path('pupil\\2022_08_29\\002\\exports\\000')  # use pathlib more robustly instead of strings
-    pupil_json_file_path_name = Path('pupil\\2022_08_29\\002\\info.player.json')
+    pupil_file_path = Path('pupil')  # use pathlib more robustly instead of strings
+    pupil_json_file_path = Path('processing_json')
 
     qualisys_file_name_markers = '2022-08-29_Pilot_Data0002.tsv'
     qualisys_file_name_skeleton = '2022-08-29_Pilot_Data0002_s_TDW.tsv'
     pupil_file_name = 'pupil_positions.csv'
+    json_file_name = 'qualisys_dict.json'
 
     # VOR Frames
     vor_start = 2500
@@ -36,14 +37,14 @@ if __name__ == "__main__":
 
     qualisys_marker_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_markers
     pupil_data_path = base_data_path / subject_id / pupil_file_path / pupil_file_name
-    pupil_json_path = base_data_path / subject_id / pupil_json_file_path_name
+    pupil_json_path = base_data_path / subject_id / pupil_json_file_path / json_file_name
 
     qualisys_df = pd.read_csv(filepath_or_buffer=str(qualisys_marker_data_path), delimiter='\t', header=11)
     pupil_df = pd.read_csv(filepath_or_buffer=str(pupil_data_path), delimiter=',', header=0)
 
     qualisys_timestamps_unix_npy = get_qualisys_unix_timestamps(qualisys_df, qualisys_marker_data_path)
 
-    subject_json_path = base_data_path / subject_id / 'processing_jsons'
+    subject_json_path = base_data_path / subject_id / 'processing_json'
 
     # a json file containing a qualisys dictionary is created in `utilities.qualisys_json_creator.py`,
     #   called by `process_data.py`. The path for this file shouldn't change, so I'm specifying it here
