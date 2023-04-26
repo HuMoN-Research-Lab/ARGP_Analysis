@@ -152,8 +152,7 @@ octave-workspace
 # Simulink autosave extension
 .autosave
 
-# TDW Added
 
 .idea
-*.json
+.DS_Store
 
