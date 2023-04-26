@@ -12,7 +12,7 @@ from pupil_labs_stuff.data_classes.rotation_data_class import RotationDataClass
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-matplotlib.use("qt5agg")
+matplotlib.use("qtagg")
 
 
 def pin_point_new_origin(point_xyz, new_origin_xyz):

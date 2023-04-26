@@ -1,18 +1,15 @@
 # adapted from - https://gist.github.com/markjay4k/da2f55e28514be7160a7c5fbf95bd243
 import logging
 from pathlib import Path
-from typing import Union, List
+from typing import Union
 
-from pyqtgraph.Qt import QtCore, QtGui
-import pyqtgraph.opengl as gl
-import pyqtgraph as pg
 import numpy as np
-import sys
-from mediapipe.python.solutions import holistic as mp_holistic
+import pyqtgraph as pg
+import pyqtgraph.opengl as gl
+from pyqtgraph.Qt import QtCore
 
 from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkeletonDataClass
 from pupil_labs_stuff.data_classes.rotation_data_class import RotationDataClass
-from pupil_labs_stuff.session_data_loader import SessionDataLoader
 
 logger = logging.getLogger(__name__)
 

@@ -4,24 +4,25 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from utilities.calculate_rotation_matrix_from_qualisys_data import calculate_rotation_matrix_from_qualisys_data
 from utilities.create_generic_skeleton_from_qualisys_data import create_generic_skeleton_from_qualisys_data
 from utilities.create_laser_skeleton import create_laser_skeleton
-from utilities.get_qualisys_unix_timestamps import get_qualisys_unix_timestamps
 from utilities.debug_skelly_plotter import debug_skelly_plotter
-from utilities.calculate_rotation_matrix_from_qualisys_data import calculate_rotation_matrix_from_qualisys_data
+from utilities.get_qualisys_unix_timestamps import get_qualisys_unix_timestamps
 
 logger = logging.getLogger(__name__)
 # logger.setLevel(INFO)
 
+
 if __name__ == "__main__":
     # move lines 12-20 to a function or separate functions
-    base_data_path = Path('C:\\Users\\miken\\DATA\\ARGP\\SAMPLE_ARGP_DATA')
+    base_data_path = Path('/Users/mdn/Documents/DATA/ARGP/demo_data_argp_analysis_Oct2022/')
     subject_id = '2022-08-29_Pilot_Data0002'
     logging.info(f'Loading data for subject: {subject_id}')
 
     qualisys_file_path = Path('qualisys')
     pupil_file_path = Path('pupil')  # use pathlib more robustly instead of strings
-    pupil_json_file_path_name = Path('pupil\\info.player.json')
+    pupil_json_file_path_name = Path('pupil/info.player.json')
 
     qualisys_file_name_markers = '2022-08-29_Pilot_Data0002.tsv'
     qualisys_file_name_skeleton = '2022-08-29_Pilot_Data0002_s_TDW.tsv'
