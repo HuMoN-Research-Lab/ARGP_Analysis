@@ -6,9 +6,11 @@ import pandas as pd
 
 from utilities.create_generic_skeleton_from_qualisys_data import create_generic_skeleton_from_qualisys_data
 from utilities.create_laser_skeleton import create_laser_skeleton
+from utilities.create_output_directory import create_output_directory
 from utilities.get_qualisys_unix_timestamps import get_qualisys_unix_timestamps
 from utilities.debug_skelly_plotter import debug_skelly_plotter
 from utilities.calculate_rotation_matrix_from_qualisys_data import calculate_rotation_matrix_from_qualisys_data
+from utilities.save_dict_as_json import save_dict_as_json
 
 logger = logging.getLogger(__name__)
 # logger.setLevel(INFO)
@@ -27,12 +29,15 @@ if __name__ == "__main__":
     qualisys_file_name_skeleton = '2022-08-29_Pilot_Data0002_s_TDW.tsv'
     pupil_file_name = 'pupil_positions.csv'
 
+    data_output_path = base_data_path / subject_id / 'data_output'
+    create_output_directory(data_output_path)
+
     # VOR Frames
     vor_start = 2500
     vor_end = 5600
 
     # SET DEBUG HERE
-    debug = True
+    debug = False
 
     qualisys_marker_data_path = base_data_path / subject_id / qualisys_file_path / qualisys_file_name_markers
     pupil_data_path = base_data_path / subject_id / pupil_file_path / pupil_file_name
@@ -54,7 +59,6 @@ if __name__ == "__main__":
     head_rotation_data = calculate_rotation_matrix_from_qualisys_data(generic_skelly_dict)
 
     if debug:
-
         debug_skelly_plotter(generic_skelly_dict, select_frame=np.array([3000]))
 
     create_laser_skeleton(session_path=base_data_path / subject_id,
@@ -65,5 +69,10 @@ if __name__ == "__main__":
                           vor_end=vor_end,
                           qualisys_timestamps_unix_npy=qualisys_timestamps_unix_npy,
                           debug=debug)
+
+    # Save Data
+    save_dict_as_json(input_dictionary=generic_skelly_dict,
+                      output_string_name='generic_skelly',
+                      output_path=str(data_output_path))
 
     f = 'debug_stop'
