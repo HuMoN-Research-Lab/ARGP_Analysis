@@ -155,4 +155,4 @@ octave-workspace
 
 .idea
 .DS_Store
-
+*.png
