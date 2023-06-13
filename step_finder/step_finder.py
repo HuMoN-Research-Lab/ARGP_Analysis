@@ -1,54 +1,55 @@
 import pickle
+from pathlib import Path
 
 import numpy as np
 import scipy
 from scipy.signal import butter, filtfilt
 
 
-class StepFinder:
-
-    def calculate_velocity_acceleration_jerk(position_data, frame_rate):
-        velocity_data = np.diff(position_data) / frame_rate
-        acceleration_data = np.diff(velocity_data) / frame_rate
-        jerk_data = np.diff(acceleration_data) / frame_rate
-        return velocity_data, acceleration_data, jerk_data
-
-    # Create a time vector (using any trajectory would've been fine)
-    def create_time_vector(left_heel_data, frame_rate):
-        time_vector = np.arange(0, len(left_heel_data)/frame_rate, 1/frame_rate)
-        return time_vector
 
 
-    # filter the data to clean the spikes in derived data
-    def butterworth_filter(data, cutoff, frame_rate, order=4, filter_type='low'):
+def calculate_velocity_acceleration_jerk(position_data, frame_rate):
+    velocity_data = np.diff(position_data) / frame_rate
+    acceleration_data = np.diff(velocity_data) / frame_rate
+    jerk_data = np.diff(acceleration_data) / frame_rate
+    return velocity_data, acceleration_data, jerk_data
 
-        nyq = 0.5 * frame_rate
-        normal_cutoff = cutoff / nyq
-        b, a = butter(order, normal_cutoff, btype=filter_type, analog=False)
+# Create a time vector (using any trajectory would've been fine)
+def create_time_vector(left_heel_data, frame_rate):
+    time_vector = np.arange(0, len(left_heel_data)/frame_rate, 1/frame_rate)
+    return time_vector
 
-        # Adjust the padlen based on the length of the data
-        padlen = min(order * 3, len(data) - 1)
 
-        y = filtfilt(b, a, data, padlen=padlen)
-        return y
+# filter the data to clean the spikes in derived data
+def butterworth_filter(data, cutoff, frame_rate, order=4, filter_type='low'):
 
-    # find frames where heel strikes occur
-    def find_heel_strikes(velocity_data, position_data, acceleration_data, velocity_threshold, position_threshold,acceleration_threshold):
-        heel_strike_indices = []
-        data_length = len(velocity_data)
+    nyq = 0.5 * frame_rate
+    normal_cutoff = cutoff / nyq
+    b, a = butter(order, normal_cutoff, btype=filter_type, analog=False)
 
-        for i in range(1, data_length - 1):  # Adjust the range to avoid index errors
-            # Check for local minima below the threshold
-            if (velocity_data[i] < velocity_threshold and
-                    velocity_data[i] < velocity_data[i - 1] and
-                    velocity_data[i] < velocity_data[i + 1]):
-                # Look in the next 75 frames
-                for j in range(i + 1, min(i + 76, data_length)):
-                    if position_data[j] < position_threshold and acceleration_data[j] > acceleration_threshold:
-                        heel_strike_indices.append(j)
-                        break  # Exit inner loop once the heel strike is found
+    # Adjust the padlen based on the length of the data
+    padlen = min(order * 3, len(data) - 1)
 
-        return heel_strike_indices
+    y = filtfilt(b, a, data, padlen=padlen)
+    return y
+
+# find frames where heel strikes occur
+def find_heel_strikes(velocity_data, position_data, acceleration_data, velocity_threshold, position_threshold,acceleration_threshold):
+    heel_strike_indices = []
+    data_length = len(velocity_data)
+
+    for i in range(1, data_length - 1):  # Adjust the range to avoid index errors
+        # Check for local minima below the threshold
+        if (velocity_data[i] < velocity_threshold and
+                velocity_data[i] < velocity_data[i - 1] and
+                velocity_data[i] < velocity_data[i + 1]):
+            # Look in the next 75 frames
+            for j in range(i + 1, min(i + 76, data_length)):
+                if position_data[j] < position_threshold and acceleration_data[j] > acceleration_threshold:
+                    heel_strike_indices.append(j)
+                    break  # Exit inner loop once the heel strike is found
+
+    return heel_strike_indices
 
 
 
@@ -77,6 +78,7 @@ if __name__ == "__main__":
     right_heel_x = right_heel_data[:, 0]
     right_heel_y = right_heel_data[:, 1]
     right_heel_z = right_heel_data[:, 2]
+
 
     # establish time vector
     time_vector = create_time_vector(left_heel_data, frame_rate)
@@ -118,8 +120,5 @@ if __name__ == "__main__":
 
 
 
-    step_finder = StepFinder(wow = "wooooooW")
-    step_finder.print_wow()
-    step_finder.print_whee()
 
 
