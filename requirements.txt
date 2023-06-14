@@ -8,3 +8,4 @@ keyboard==0.13.5
 scipy~=1.9.1
 scikit-learn==1.1.2
 pyqt6
+plotly~=5.14.1
