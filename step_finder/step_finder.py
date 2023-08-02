@@ -134,39 +134,52 @@ time_vector_zj = time_vector[:-3]
 
 
 
-# Create a subplots object with 4 rows and 1 column
-fig = make_subplots(rows=1, cols=1)
-
+# Create debug plot
+fig = make_subplots(rows=2, cols=1)
 # Left heel Z position plot
 fig.add_trace(
     go.Scatter(
-        x=time_vector, y=filtered_left_heel_z,
-        mode="lines", name="Left heel Z position", line=dict(color="yellow")
+        x=time_vector,
+        y=filtered_left_heel_z,
+        mode="lines",
+        name="Left heel Z position",
+        line=dict(color="darkorange")
     ),
     row=1, col=1
 )
 
-fig.add_shape(
-    type="line", x0=min(time_vector), x1=max(time_vector), y0=40, y1=40,
-    yref="y1", xref="x1", line=dict(color="red", dash="dash")
-)
-
+# Threshold line
+# fig.add_shape(
+#     type="line", x0=min(time_vector), x1=max(time_vector), y0=40, y1=40,
+#     yref="y1", xref="x1", line=dict(color="red", dash="dash")
+# )
 fig.add_trace(
     go.Scatter(
-        x=left_index_times, y=left_index_positions_z,
-        mode="markers", marker=dict(color="blue", symbol="x"),
+        x=heel_strikes_dict['left']['times'],
+        y=heel_strikes_dict['left']['positions'][:,2],
+        mode="markers",
+        marker=dict(color="blue", symbol="x"),
         name="Left Heel Strikes"
     ),
     row=1, col=1
 )
 
+fig.add_trace(
+    go.Scatter(
+        x=time_vector, y=filtered_left_heel_z,
+        mode="lines", name="Left heel Z position", line=dict(color="darkorange")
+    ),
+    row=2, col=1
+)
+
+
 # Update layout
 fig.update_layout(
     title="Left Heel Data",
-    xaxis=dict(range=[80, 100], title="Time (s)"),
+    xaxis=dict(range=[60, 100], title="Time (s)"),
     yaxis1=dict(title="Position"),
 
 )
-
 # Show the plot
 fig.show()
+

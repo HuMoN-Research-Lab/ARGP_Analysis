@@ -1,4 +1,4 @@
-
+Hea
 qualisys_joint_center_dict = {
         "head_center_xyz": {
                 "HeadL": 0.5,
