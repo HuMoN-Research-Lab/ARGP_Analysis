@@ -1,19 +1,19 @@
 import pickle
 from pathlib import Path
-from typing import Dict, Tuple, Union, Any
+from typing import Dict, Tuple, Union, Any, List
 
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from scipy.signal import savgol_filter
 
-NUMBER_OF_LEGS_TYPICAL_PEOPLE_HAVE = 2
 
 
 def segment_trials(data_xyz: np.ndarray,
                    window_length: int,
                    polyorder: int,
-                   consistency_threshold: int) -> Dict[int, Tuple[int, int]]:
+                   consistency_threshold: int,
+                   ignore_frames:List[int]=None) -> Dict[int, Tuple[int, int]]:
     assert window_length % 2 == 1, "Window length must be odd"
 
     trial_dict = {}
