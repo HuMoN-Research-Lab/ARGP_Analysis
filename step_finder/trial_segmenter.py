@@ -104,7 +104,7 @@ def trial_segmenter_main():
     trial_indexes = segment_trials(data_xyz=head_top_xyz,
                                    window_length=5,
                                    polyorder=3,
-                                   consistency_threshold=301)
+                                   consistency_threshold=801)
 
     trial_segmenter_debug_plots(trial_indexes=trial_indexes,
                                 head_top_xyz=head_top_xyz)
