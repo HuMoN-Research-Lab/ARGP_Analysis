@@ -1,19 +1,17 @@
-import pickle
-from pathlib import Path
 from typing import Dict, Tuple, Union, Any, List
-
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from scipy.signal import savgol_filter
 
+from step_finder.load_pickle import load_pilot_data
 
 
 def segment_trials(data_xyz: np.ndarray,
                    window_length: int,
                    polyorder: int,
                    consistency_threshold: int,
-                   ignore_frames:List[int]=None) -> Dict[int, Tuple[int, int]]:
+                   ignore_frames: List[int] = None) -> Dict[int, Tuple[int, int]]:
     assert window_length % 2 == 1, "Window length must be odd"
 
     trial_dict = {}
@@ -51,30 +49,6 @@ def segment_trials(data_xyz: np.ndarray,
         trial_dict[trial_num] = (trial_start, data_xyz.shape[0] - 1)
 
     return trial_dict
-
-
-def load_pickle_file(pickle_path: Union[str, Path]) -> Dict[str, Any]:
-    pickle_path = Path(pickle_path)
-    with open(pickle_path, 'rb') as f:
-        load_generic_skelly_dict = pickle.load(f)
-
-    return load_generic_skelly_dict
-
-
-def build_pilot_data_pickle_path():
-    argp_base_path = Path(r"/Users/mdn/Documents/DATA/ARGP")
-    pilot_data_path = argp_base_path / "Pilot"
-    session_data_path = pilot_data_path / "demo_data_argp_analysis_Oct2022"
-    trial_path = session_data_path / "2022-08-29_Pilot_Data0002"
-    generic_skelly_pickle_filename = "generic_skelly_dict.pkl"
-    generic_skelly_pickle_path = trial_path / generic_skelly_pickle_filename
-    return generic_skelly_pickle_path
-
-
-def load_pilot_data() -> Dict[str, Any]:
-    generic_skelly_pickle_path = build_pilot_data_pickle_path()
-    load_generic_skelly_dict = load_pickle_file(pickle_path=generic_skelly_pickle_path)
-    return load_generic_skelly_dict
 
 
 def trial_segmenter_debug_plots(trial_indexes: Dict[int, Tuple[int, int]],
