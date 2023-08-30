@@ -7,7 +7,8 @@ def load_pickle_file(pickle_path: Union[str, Path]) -> Dict[str, Any]:
     pickle_path = Path(pickle_path)
     with open(pickle_path, 'rb') as f:
         load_generic_skelly_dict = pickle.load(f)
-     return load_generic_skelly_dict
+
+    return load_generic_skelly_dict
 
 
 def build_pilot_data_pickle_path():

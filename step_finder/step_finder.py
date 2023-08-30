@@ -15,8 +15,8 @@ def calculate_velocity_acceleration_jerk(position_data, frame_rate):
 
 
 # Create a time vector (using any trajectory would've been fine)
-def create_time_vector(left_heel_data, frame_rate):
-    time_vector = np.arange(0, len(left_heel_data) / frame_rate, 1 / frame_rate)
+def create_time_vector(data, frame_rate):
+    time_vector = np.arange(0, len(data) / frame_rate, 1 / frame_rate)
     return time_vector
 
 
