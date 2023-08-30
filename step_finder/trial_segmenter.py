@@ -1,28 +1,25 @@
-from typing import Dict, Tuple, Union, Any, List
+import pickle
 import numpy as np
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-from scipy.signal import savgol_filter
 
-from step_finder.load_pickle import load_pilot_data
+from plotly.subplots import make_subplots
+from pathlib import Path
+from typing import Dict, Tuple, Union, Any, List
+from scipy.signal import butter, filtfilt
+from scipy.signal import savgol_filter
+from step_finder.load_pickle import load_pilot_data, load_pickle_file, build_pilot_data_pickle_path
 
 
 def segment_trials(data_xyz: np.ndarray,
-                   window_length: int,
-                   polyorder: int,
-                   consistency_threshold: int,
-                   ignore_frames: List[int] = None) -> Dict[int, Tuple[int, int]]:
-    assert window_length % 2 == 1, "Window length must be odd"
+                   consistency_threshold: int):
+    # ignore_frames: List[int] = None) -> Dict[int, Tuple[int, int]]:
 
     trial_dict = {}
     trial_num = 0
     trial_start = None
 
-    # Apply a Savitzky-Golay filter to smooth the y-coordinate data
-    y_smooth = savgol_filter(data_xyz[:, 1], window_length, polyorder)
-
     # Compute the derivative of the smoothed y-coordinate data
-    y_velocity = np.gradient(y_smooth)
+    y_velocity = np.gradient(data_xyz)
 
     potential_sign_change_frame = None
 
@@ -70,14 +67,57 @@ def trial_segmenter_debug_plots(trial_indexes: Dict[int, Tuple[int, int]],
     fig.show()
 
 
+def butterworth_filter(data, cutoff, frame_rate, order=4, filter_type='low'):
+    nyq = 0.5 * frame_rate
+    normal_cutoff = cutoff / nyq
+    b, a = butter(order, normal_cutoff, btype=filter_type, analog=False)
+
+    # Adjust the padlen based on the length of the data
+    padlen = min(order * 3, len(data) - 1)
+
+    y = filtfilt(b, a, data, padlen=padlen)
+    return y
+
+
+def savgol_filter(data_y, window_length, polyorder):
+    assert window_length % 2 == 1, "Window length must be odd"
+    y_smooth = savgol_filter(data_y, window_length, polyorder)
+
+    return y_smooth
+
+
+# def load_pickle_file(pickle_path: Union[str, Path]) -> Dict[str, Any]:
+#     pickle_path = Path(pickle_path)
+#     with open(pickle_path, 'rb') as f:
+#         load_generic_skelly_dict = pickle.load(f)
+#
+#     return load_generic_skelly_dict
+#
+#
+# def build_pilot_data_pickle_path():
+#     argp_base_path = Path(r"/Users/mdn/Documents/DATA/ARGP")
+#     pilot_data_path = argp_base_path / "Pilot"
+#     session_data_path = pilot_data_path / "demo_data_argp_analysis_Oct2022"
+#     trial_path = session_data_path / "2022-08-29_Pilot_Data0002"
+#     generic_skelly_pickle_filename = "generic_skelly_dict.pkl"
+#     generic_skelly_pickle_path = trial_path / generic_skelly_pickle_filename
+#     return generic_skelly_pickle_path
+#
+#
+# def load_pilot_data() -> Dict[str, Any]:
+#     generic_skelly_pickle_path = build_pilot_data_pickle_path()
+#     load_generic_skelly_dict = load_pickle_file(pickle_path=generic_skelly_pickle_path)
+#     return load_generic_skelly_dict
+
+
 def trial_segmenter_main():
     generic_skelly_dict = load_pilot_data()
 
     head_top_xyz = generic_skelly_dict['head_top_xyz']
 
-    trial_indexes = segment_trials(data_xyz=head_top_xyz,
-                                   window_length=5,
-                                   polyorder=3,
+    y_smooth = butterworth_filter(head_top_xyz[:, 1], cutoff=10, frame_rate=300, order=4, filter_type='low')
+
+    trial_indexes = segment_trials(y_smooth,
                                    consistency_threshold=801)
 
     trial_segmenter_debug_plots(trial_indexes=trial_indexes,
@@ -86,4 +126,4 @@ def trial_segmenter_main():
 
 if __name__ == "__main__":
     trial_segmenter_main()
-    print("Trial Segmenter Complete!")
+    print("Trial Segmentor Complete!")
