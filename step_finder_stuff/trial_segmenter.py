@@ -1,13 +1,12 @@
-import pickle
+from typing import Dict, Tuple
+
 import numpy as np
 import plotly.graph_objects as go
-
 from plotly.subplots import make_subplots
-from pathlib import Path
-from typing import Dict, Tuple, Union, Any, List
-from scipy.signal import butter, filtfilt
 from scipy.signal import savgol_filter
-from step_finder.load_pickle import load_pilot_data, load_pickle_file, build_pilot_data_pickle_path
+
+from utilities.butterworth_filter import butterworth_filter
+from step_finder_stuff.load_pickle import load_pilot_data
 
 
 def segment_trials(data_xyz: np.ndarray,
@@ -67,16 +66,16 @@ def trial_segmenter_debug_plots(trial_indexes: Dict[int, Tuple[int, int]],
     fig.show()
 
 
-def butterworth_filter(data, cutoff, frame_rate, order=4, filter_type='low'):
-    nyq = 0.5 * frame_rate
-    normal_cutoff = cutoff / nyq
-    b, a = butter(order, normal_cutoff, btype=filter_type, analog=False)
-
-    # Adjust the padlen based on the length of the data
-    padlen = min(order * 3, len(data) - 1)
-
-    y = filtfilt(b, a, data, padlen=padlen)
-    return y
+# def butterworth_filter(data, cutoff, frame_rate, order=4, filter_type='low'):
+#     nyq = 0.5 * frame_rate
+#     normal_cutoff = cutoff / nyq
+#     b, a = butter(order, normal_cutoff, btype=filter_type, analog=False)
+#
+#     # Adjust the padlen based on the length of the data
+#     padlen = min(order * 3, len(data) - 1)
+#
+#     y = filtfilt(b, a, data, padlen=padlen)
+#     return y
 
 
 def savgol_filter(data_y, window_length, polyorder):
