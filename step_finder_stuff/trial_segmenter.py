@@ -4,6 +4,7 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from scipy.signal import savgol_filter
+import csv
 
 from utilities.butterworth_filter import butterworth_filter
 from step_finder_stuff.load_pickle import load_pilot_data
@@ -122,7 +123,16 @@ def trial_segmenter_main():
     trial_segmenter_debug_plots(trial_indexes=trial_indexes,
                                 head_top_xyz=head_top_xyz)
 
+def export_dict_to_csv(data_dict, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        fieldnames = list(data_dict.keys())
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        writer.writerow(data_dict)
+
 
 if __name__ == "__main__":
     trial_segmenter_main()
+    export_dict_to_csv(trial_indexes, 'trial_indexes.csv')
     print("Trial Segmentor Complete!")
