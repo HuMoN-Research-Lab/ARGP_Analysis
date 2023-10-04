@@ -43,3 +43,34 @@ def get_joint_from_markers(qualisys_dict: dict,
         joint_array = marker_dict[key] + joint_array
 
     return joint_array
+
+#def get_joint_from_markers(qualisys_dict: dict,
+#                            markers_to_combine: dict) -> np.array:
+#
+#     joint_arrays = []  # List to store the arrays
+#     marker_dict = {}  # create an empty dictionary to update
+#
+#     for key, value in markers_to_combine.items():
+#         marker_list = get_marker_key_list_for_joint(qualisys_dict, key)
+#         marker_array = np.array([])
+#
+#         for marker_name in marker_list:
+#             temp_dict_values = qualisys_dict.get(marker_name).values()
+#             this_weight = value
+#             temp_dict_to_array = np.array(list(temp_dict_values)) * this_weight
+#
+#             if marker_array.shape[0] == 0:  # if marker_array is empty
+#                 marker_array = temp_dict_to_array
+#             elif marker_array.shape[0] > 1:
+#                 marker_array = np.column_stack((marker_array, temp_dict_to_array))
+#
+#         marker_dict.update(({key: marker_array}))
+#
+#     # Append the arrays to the joint_arrays list
+#     for key in marker_dict:
+#         joint_arrays.append(marker_dict[key])
+#
+#     # Sum up the arrays in the joint_arrays list
+#     joint_array = sum(joint_arrays)
+#
+#     return joint_array

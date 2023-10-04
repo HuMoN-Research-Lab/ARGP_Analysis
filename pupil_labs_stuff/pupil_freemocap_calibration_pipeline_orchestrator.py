@@ -26,14 +26,14 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
     vor_frame_end: int = None
 
     def __init__(
-        self,
-        session_path: Union[Path, str] = None,  # None makes it an optional parameter - gives it a default value
-        debug: bool = False,
-        generic_skelly_dict: dict = None,
-        pupil_df: pd.DataFrame = None,
-        pupil_json_path: Path = None,
-        vor_frame_start: int = None,
-        vor_frame_end: int = None,
+            self,
+            session_path: Union[Path, str] = None,  # None makes it an optional parameter - gives it a default value
+            debug: bool = False,
+            generic_skelly_dict: dict = None,
+            pupil_df: pd.DataFrame = None,
+            pupil_json_path: Path = None,
+            vor_frame_start: int = None,
+            vor_frame_end: int = None,
     ):
 
         if session_path is not None:  # conditional for running qualisys code
@@ -60,11 +60,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
     def run_qualisys(self,
                      qualisys_timestamps_unix_npy: np.ndarray):
 
-        f = '`run_qualisys`'
-
-        logger.info(
-            f"Creating the Laser Skeleton \\o/ in {f}"
-        )
+        logger.info(f"Creating the Laser Skeleton \\o/")
 
         ####
         # load pupil data
@@ -88,9 +84,8 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         ####
         # Synchronize pupil data with freemocap data - results in synchronized_session_data (each stream has exactly the same number of frames)
         ####
-        synchronized_session_data = PupilFreemocapSynchronizer(  # TODO create PupilQualisysSynchronizer
-            self.raw_session_data
-        ).synchronize(
+        # TODO create PupilQualisysSynchronizer
+        synchronized_session_data = PupilFreemocapSynchronizer(self.raw_session_data).synchronize(
             vor_frame_start=self.vor_frame_start,
             vor_frame_end=self.vor_frame_end,
             debug=self.debug,
@@ -137,8 +132,9 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         synchronized_session_data.right_gaze_vector_endpoint_fr_xyz = (
             vor_calibrator.calibrate(
                 synchronized_session_data.skeleton_data['right_eyeball_center_xyz'],
-                copy.deepcopy(synchronized_session_data.right_eye_pupil_labs_data),  # TODO Jon says that I don't need the rotation matrix for the eye, I can just use the head. I only need the xyz position of the eye.
-                                                                                     # Figure out what I need to feed into the calibrator to get it to work with my data; see how `right_eye_socket_rotation_data` is used
+                copy.deepcopy(synchronized_session_data.right_eye_pupil_labs_data),
+                # TODO Jon says that I don't need the rotation matrix for the eye, I can just use the head. I only need the xyz position of the eye.
+                # Figure out what I need to feed into the calibrator to get it to work with my data; see how `right_eye_socket_rotation_data` is used
                 # copy.deepcopy(synchronized_session_data.right_eye_socket_rotation_data),
                 copy.deepcopy(synchronized_session_data.head_rotation_data),
                 fixation_point_fr_xyz,
@@ -162,7 +158,6 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
         # Play laser skeleton animation (as both a cool thing and a debug tool)
         ####
         if self.debug:
-
             qt_gl_laser_skeleton = QtGlLaserSkeletonVisualizerQualisys(
                 session_data=synchronized_session_data,
                 move_data_to_origin_bool=True,
@@ -174,7 +169,7 @@ class PupilFreemocapCalibrationPipelineOrchestrator:
     def save_gaze_data(self, synchronized_session_data):
         data_arrays_directory_path = self.session_path / "data_arrays"
         try:
-            Path(self.session_path/"data_arrays").mkdir(parents=True, exist_ok=False)
+            Path(self.session_path / "data_arrays").mkdir(parents=True, exist_ok=False)
             logger.info(
                 f"Creating save_gaze_data path: {data_arrays_directory_path}"
             )

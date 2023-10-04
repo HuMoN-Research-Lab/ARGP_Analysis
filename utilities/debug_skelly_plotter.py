@@ -22,7 +22,6 @@ def debug_skelly_plotter(generic_skelly_dict: dict,
 
     for key in generic_skelly_dict:
         temp_joint_xyz = generic_skelly_dict[key]
-
         temp_x += temp_joint_xyz[select_frame[0]][0]
         temp_y += temp_joint_xyz[select_frame[0]][1]
         temp_z += temp_joint_xyz[select_frame[0]][2]

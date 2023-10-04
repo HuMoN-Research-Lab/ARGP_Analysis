@@ -6,6 +6,7 @@ from plotly.subplots import make_subplots
 from scipy.signal import savgol_filter
 import csv
 
+from step_finder_stuff.parameters.butterworth_parameters import BUTTERWORTH_FILTER_PARAMETERS
 from utilities.butterworth_filter import butterworth_filter
 from step_finder_stuff.load_pickle import load_pilot_data
 
@@ -109,19 +110,23 @@ def savgol_filter(data_y, window_length, polyorder):
 #     load_generic_skelly_dict = load_pickle_file(pickle_path=generic_skelly_pickle_path)
 #     return load_generic_skelly_dict
 
-
 def trial_segmenter_main():
     generic_skelly_dict = load_pilot_data()
 
     head_top_xyz = generic_skelly_dict['head_top_xyz']
 
-    y_smooth = butterworth_filter(head_top_xyz[:, 1], cutoff=10, frame_rate=300, order=4, filter_type='low')
+    y_smooth = butterworth_filter(head_top_xyz[:, 1]
+                                  ** BUTTERWORTH_FILTER_PARAMETERS)
+
 
     trial_indexes = segment_trials(y_smooth,
                                    consistency_threshold=801)
 
+    export_dict_to_csv(trial_indexes, 'trial_indexes.csv')
+
     trial_segmenter_debug_plots(trial_indexes=trial_indexes,
                                 head_top_xyz=head_top_xyz)
+
 
 def export_dict_to_csv(data_dict, filename):
     with open(filename, 'w', newline='') as csvfile:
@@ -134,5 +139,5 @@ def export_dict_to_csv(data_dict, filename):
 
 if __name__ == "__main__":
     trial_segmenter_main()
-    export_dict_to_csv(trial_indexes, 'trial_indexes.csv')
+
     print("Trial Segmentor Complete!")

@@ -1,4 +1,3 @@
-Hea
 qualisys_joint_center_dict = {
         "head_center_xyz": {
                 "HeadL": 0.5,
@@ -39,21 +38,23 @@ qualisys_joint_center_dict = {
                 "RHandOut": 1
         },
 
+        # NOTE: Made changes from "ShoulderFront" to "ShoulderTop" and set the cspine as "spine_top" instead of the
+        # average of the shoulders as a bandiad solution to get full pilot to run
         "left_shoulder_xyz": {
-                "LShoulderFront": 0.5,
-                "LShoulderBack": 0.5
+                "LShoulderTop": 0.8,
+                "LShoulderBack": 0.2
         },
 
         "right_shoulder_xyz": {
-                "RShoulderFront": 0.5,
-                "RShoulderBack": 0.5
+                "RShoulderTop": 0.8,
+                "RShoulderBack": 0.2
         },
 
         "cspine_xyz": {
-            "RShoulderBack": 0.25,
-            "LShoulderBack": 0.25,
-            "RShoulderFront": 0.25,
-            "LShoulderFront": 0.25
+                "LShoulderTop": 0.4,
+                "LShoulderBack": 0.1,
+                "RShoulderTop": 0.4,
+                "RShoulderBack": 0.1
         },
 
         "left_elbow_xyz": {
