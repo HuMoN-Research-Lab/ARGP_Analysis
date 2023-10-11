@@ -4,12 +4,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from pupil_labs_stuff.VOR_debug_plotly import VOR_debug_plotly
 from utilities.calculate_rotation_matrix_from_qualisys_data import calculate_rotation_matrix_from_qualisys_data
 from utilities.configure_logging import configure_logging, LogLevel
 from utilities.create_generic_skeleton_from_qualisys_data import create_generic_skeleton_from_qualisys_data
 from utilities.create_laser_skeleton import create_laser_skeleton
-from utilities.debug_skelly_plotter import debug_skelly_plotter
 from utilities.debug_skelly_plotter_plotly import debug_skelly_plotter_plotly
 from utilities.get_qualisys_unix_timestamps import get_qualisys_unix_timestamps
 
