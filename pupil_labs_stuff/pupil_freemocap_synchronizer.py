@@ -4,6 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib
 
+from pupil_labs_stuff.VOR_debug_plotly import VOR_debug_plotly
 from pupil_labs_stuff.data_classes.freemocap_session_data_class import LaserSkeletonDataClass
 from pupil_labs_stuff.data_classes.pupil_dataclass_and_handler import PupilLabsDataClass
 
@@ -491,4 +492,7 @@ class PupilFreemocapSynchronizer:
         ax2.legend(loc="upper right")
 
         plt.show()
+        debug = True
 
+        if debug:
+             VOR_debug_plotly(self, vor_frame_start, vor_frame_end, synchronized_session_data)

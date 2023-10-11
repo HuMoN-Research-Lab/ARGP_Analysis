@@ -4,11 +4,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from pupil_labs_stuff.VOR_debug_plotly import VOR_debug_plotly
 from utilities.calculate_rotation_matrix_from_qualisys_data import calculate_rotation_matrix_from_qualisys_data
 from utilities.configure_logging import configure_logging, LogLevel
 from utilities.create_generic_skeleton_from_qualisys_data import create_generic_skeleton_from_qualisys_data
 from utilities.create_laser_skeleton import create_laser_skeleton
 from utilities.debug_skelly_plotter import debug_skelly_plotter
+from utilities.debug_skelly_plotter_plotly import debug_skelly_plotter_plotly
 from utilities.get_qualisys_unix_timestamps import get_qualisys_unix_timestamps
 
 configure_logging(LogLevel.DEBUG)
@@ -59,7 +61,7 @@ if __name__ == "__main__":
     head_rotation_data = calculate_rotation_matrix_from_qualisys_data(generic_skelly_dict)
 
     if debug:
-        debug_skelly_plotter(generic_skelly_dict, select_frame=np.array([14500]))
+        debug_skelly_plotter_plotly(generic_skelly_dict, select_frame=np.array([14500]))
 
     create_laser_skeleton(session_path=base_data_path / subject_id,
                           generic_skelly_dict=generic_skelly_dict,
