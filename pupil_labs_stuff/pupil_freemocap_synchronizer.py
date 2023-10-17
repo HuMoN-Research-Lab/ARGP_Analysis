@@ -222,52 +222,58 @@ class PupilFreemocapSynchronizer:
                                     ]
 
     def resample_eye_data(self):
-        freemocap_timestamps = self.synchronized_timestamps
+        mocap_timestamps = self.synchronized_timestamps
         right_eye_timestamps = self.right_eye_timestamps_clipped
         left_eye_timestamps = self.left_eye_timestamps_clipped
 
+        # Assuming these are your timestamps and corresponding values:
+        mocap_timestamps = np.linspace(0, 723, 724029)
+        left_eye_timestamps = np.linspace(0, 723, 287930)
+        left_eye_values = np.linspace(0, 723, 287930)
+
+
         self.right_eye_pupil_center_normal_x = np.interp(
-            freemocap_timestamps,
             right_eye_timestamps,
-            self.right_eye_pupil_center_normal_x_clipped,
+            mocap_timestamps,
+            self.synchronized_timestamps,
         )
         self.right_eye_pupil_center_normal_y = np.interp(
-            freemocap_timestamps,
             right_eye_timestamps,
-            self.right_eye_pupil_center_normal_y_clipped,
+            mocap_timestamps,
+            self.synchronized_timestamps,
         )
         self.right_eye_pupil_center_normal_z = np.interp(
-            freemocap_timestamps,
             right_eye_timestamps,
-            self.right_eye_pupil_center_normal_z_clipped,
+            mocap_timestamps,
+            self.synchronized_timestamps,
         )
         self.right_eye_theta = np.interp(
-            freemocap_timestamps, right_eye_timestamps, self.right_eye_theta_clipped
+            right_eye_timestamps, mocap_timestamps, self.synchronized_timestamps
         )
         self.right_eye_phi = np.interp(
-            freemocap_timestamps, right_eye_timestamps, self.right_eye_phi_clipped
+            right_eye_timestamps, mocap_timestamps, self.synchronized_timestamps
         )
 
         self.left_eye_pupil_center_normal_x = np.interp(
-            freemocap_timestamps,
             left_eye_timestamps,
-            self.left_eye_pupil_center_normal_x_clipped,
+            mocap_timestamps,
+            self.synchronized_timestamps,
         )
         self.left_eye_pupil_center_normal_y = np.interp(
-            freemocap_timestamps,
             left_eye_timestamps,
-            self.left_eye_pupil_center_normal_y_clipped,
+            mocap_timestamps,
+            self.synchronized_timestamps,
         )
         self.left_eye_pupil_center_normal_z = np.interp(
-            freemocap_timestamps,
             left_eye_timestamps,
-            self.left_eye_pupil_center_normal_z_clipped,
+            mocap_timestamps,
+            self.synchronized_timestamps,
         )
         self.left_eye_theta = np.interp(
-            freemocap_timestamps, left_eye_timestamps, self.left_eye_theta_clipped
+            left_eye_timestamps, mocap_timestamps, self.synchronized_timestamps
         )
         self.left_eye_phi = np.interp(
-            freemocap_timestamps, left_eye_timestamps, self.left_eye_phi_clipped
+            left_eye_timestamps, mocap_timestamps, self.synchronized_timestamps
         )
 
     def normalize_eye_data(self):
