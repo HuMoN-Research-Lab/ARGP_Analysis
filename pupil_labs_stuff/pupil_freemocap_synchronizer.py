@@ -39,7 +39,7 @@ class PupilFreemocapSynchronizer:
         )
         left_eye_timestamps = self.raw_session_data.left_eye_pupil_labs_data.timestamps
 
-        # find the LATEST start time (so we can clip off the data that doesnt have a match in the other datastreams)
+        # find the LATEST start time (so we can clip off the data that doesn't have a match in the other datastreams)
         start_time_unix = np.max(
             (mocap_timestamps[0],
              right_eye_timestamps[0],
@@ -164,6 +164,13 @@ class PupilFreemocapSynchronizer:
 
         so we'll need to loop through that and clip each joint's data according to the start and end frames and put it into another numpy array with the same shape
         """
+        ## Check if skeleton_data is None before proceeding
+        # if self.raw_session_data.skeleton_data is not None:
+        #     pass
+        # else:
+        #     # Handle the scenario where self.raw_session_data.skeleton_data is None
+        #     raise ValueError("skeleton_data has not been loaded.")
+
         self.mocap_timestamps_clipped = self.raw_session_data.mocap_timestamps[
                                         self.mocap_start_frame: self.mocap_end_frame
                                         ]
